@@ -71,9 +71,7 @@ bool operator>(const HealthPoints& healthPointsOne, const HealthPoints& healthPo
 }
 
 bool operator<(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo) {
-    int hpOne = healthPointsOne.getHP();
-    int hpTwo = healthPointsTwo.getHP();
-    return hpOne < hpTwo;
+    return !(healthPointsOne > healthPointsTwo || healthPointsOne == healthPointsTwo);
 }
 
 bool operator<=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo) {

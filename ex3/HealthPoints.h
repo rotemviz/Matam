@@ -11,6 +11,7 @@ class HealthPoints {
     static const int DEFAULT_MAX_HP = 100;
 
 public:
+
     HealthPoints(int maxHP = DEFAULT_MAX_HP);
     ~HealthPoints() = default;
     HealthPoints(const HealthPoints& healthPoints) = default;

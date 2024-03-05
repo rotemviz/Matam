@@ -7,7 +7,7 @@ class Node {
     T data;
     Node<T>* next;
     friend class Queue<T>;
-    ~Node() = default; //check this
+
 public:
     Node(T givenData);
     Node();

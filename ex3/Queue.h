@@ -1,19 +1,19 @@
 #ifndef QUEUE
 #define QUEUE
 
-#include "List.h"
+#include "Node.h"
 
 template<class T>
 class Queue {
 
-    List<T>* m_head;
-    List<T>* m_tail;
+    Node<T>* m_head;
+    Node<T>* m_tail;
     int m_size;
 
 public:
     Queue(const T& data);
     Queue();
-    Queue(const Queue& queue) = default;
+    Queue(const Queue& queue) = default; //CHANG !!
     ~Queue();
     operator=(const Queue& queue) = default; //CHANG !!
     void pushBack(T data);
@@ -26,18 +26,18 @@ public:
 
 template<class T>
 Queue<T>::Queue(const T& data) :
-    m_head(new List<T>(data)), m_tail(m_head), m_size(1)
+    m_head(new Node<T>(data)), m_tail(m_head), m_size(1)
 {}
 
 template<class T>
 Queue<T>::Queue() :
-    m_head(new List<T>()), m_tail(m_head), m_size(0)
+    m_head(new Node<T>()), m_tail(m_head), m_size(0)
 {}
 
 template<class T>
 Queue<T>::~Queue() {
     while(m_head != nullptr) {
-        List<T>* tempPointer = m_head;
+        Node<T>* tempPointer = m_head;
         m_head = m_head->next;
         delete tempPointer;
     }
@@ -51,7 +51,7 @@ void Queue<T>::pushBack(T data) {
         m_size++;
         return;
     }
-    List<T>* newNode = new List<T>(data);
+    Node<T>* newNode = new List<T>(data);
     if(!newNode) {
         throw std::bad_alloc();
     }
@@ -70,7 +70,7 @@ void Queue<T>::popFront() {
     if(m_size == 0) {
         throw EmptyQueue();
     }
-    List<T>* tempPoiter = m_head;
+    Node<T>* tempPoiter = m_head;
     m_head = m_head->next;
     delete tempPoiter;
     m_size--;

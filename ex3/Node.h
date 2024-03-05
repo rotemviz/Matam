@@ -2,25 +2,25 @@
 #define NODE
 
 template<class T>
-class List {
+class Node {
     
     T data;
-    List<T>* next;
+    Node<T>* next;
     friend class Queue<T>;
-    ~List() = default; //check this
+    ~Node() = default; //check this
 public:
-    List(T givenData);
-    List();
-    ~List() = default;
+    Node(T givenData);
+    Node();
+    ~Node() = default;
 };
 
 template<class T>
-List<T>::List(T givenData) : 
+Node<T>::Node(T givenData) : 
     data(givenData), next(nullptr)
 {}
 
 template<class T>
-List<T>::List() :
+Node<T>::Node() :
     data(), next(nullptr)
 {}
 

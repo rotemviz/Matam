@@ -9,19 +9,13 @@ class Node {
     friend class Queue<T>;
 
 public:
-    Node(T givenData);
-    Node();
+    Node(const T& givenData);
     ~Node() = default;
 };
 
 template<class T>
-Node<T>::Node(T givenData) : 
+Node<T>::Node(const T& givenData) : 
     data(givenData), next(nullptr)
-{}
-
-template<class T>
-Node<T>::Node() :
-    data(), next(nullptr)
 {}
 
 #endif

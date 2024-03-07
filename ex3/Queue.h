@@ -162,8 +162,9 @@ int Queue<T>::size() const {
 template<class T>
 class Queue<T>::Iterator {
 
+    Queue<T>* queue;
     Node<T>* node;
-    Iterator(Node<T>* node);
+    Iterator(const Queue<T>* queue, Node<T>* node);
     friend class Queue<T>;
 
 public:
@@ -175,31 +176,45 @@ public:
     ~Iterator() = default;
     Iterator(const Iterator& iterator) = default;
     Iterator& operator=(const Iterator& iterator) = default;
+
+    class InvalidOperation{};
 };
 
 template<class T>
-Queue<T>::Iterator::Iterator(Node<T>* node) : 
-    node(node)
+Queue<T>::Iterator::Iterator(const Queue<T>* queue, Node<T>* node) : 
+    queue(queue), node(node)
 {}
 
 template<class T>
 bool Queue<T>::Iterator::operator==(const Iterator& iterator) const {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     return node == iterator.node;
 }
 
 template<class T>
 bool Queue<T>::Iterator::operator!=(const Iterator& iterator) const {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     return !(*this == iterator);
 }
 
 template<class T>
 Queue<T>::Iterator& Queue<T>::Iterator::operator++() {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     node = node->next;
     return *this;
 }
 
 template<class T>
 T& Queue<T>::Iterator::operator*() {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     return node->data;
 }
 
@@ -217,7 +232,7 @@ template<class T>
 class Queue<T>::ConstIterator {
 
     const Node<T>* node;
-    ConstIterator(const Node<T>* node);
+    ConstIterator(const Queue<T>* queue, const Node<T>* node);
     friend class Queue<T>;
 
 public:
@@ -229,31 +244,45 @@ public:
     ~ConstIterator() = default;
     ConstIterator(const ConstIterator& constIterator) = default;
     ConstIterator& operator=(const ConstIterator& constIterator) = default;
+
+    class InvalidOperation{};
 };
 
 template<class T>
-Queue<T>::ConstIterator::ConstIterator(const Node<T>* node) : 
-    node(node)
+Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node<T>* node) : 
+    queue(queue), node(node)
 {}
 
 template<class T>
 bool Queue<T>::ConstIterator::operator==(const ConstIterator& constIterator) const {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     return node == constIterator.node;
 }
 
 template<class T>
 bool Queue<T>::ConstIterator::operator!=(const ConstIterator& constIterator) const {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     return !(*this == constIterator);
 }
 
 template<class T>
 Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++() {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     node = node->next;
     return *this;
 }
 
 template<class T>
 const T& Queue<T>::ConstIterator::operator*() const {
+    if(*this == queue->end()) {
+        throw InvalidOperation();
+    }
     return node->data;
 }
 

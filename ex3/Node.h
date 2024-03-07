@@ -4,9 +4,9 @@
 template<class T>
 class Node {
     
+    friend class Queue<T>;
     T data;
     Node<T>* next;
-    friend class Queue<T>;
 
 public:
     Node(const T& givenData);

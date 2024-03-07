@@ -38,7 +38,7 @@ Queue<T>::Queue() :
 {}
 
 template<class T>
-Queue<T>::Queue(const Queue& queue) : {
+Queue<T>::Queue(const Queue<T>& queue) : {
     if(queue.m_size == 0) {
         m_head(nullptr);
         m_tail(m_head);
@@ -78,7 +78,7 @@ Queue<T>::~Queue() {
 }
 
 template<class T>
-Queue<T>& Queue<T>::operator=(const Queue& queue) {
+Queue<T>& Queue<T>::operator=(const Queue<T>& queue) {
     if(queue.m_size == 0) {
         m_head = nullptr;
         m_tail = m_head;

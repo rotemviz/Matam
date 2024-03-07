@@ -53,8 +53,8 @@ Queue<T>::Queue() :
 template<class T>
 Queue<T>::Queue(const Queue<T>& queue) : {
     if(queue.m_size == 0) {
-        m_head(nullptr);
-        m_tail(m_head);
+        m_head = nullptr;
+        m_tail = m_head;
         m_size = 0;
     }
     else {
@@ -215,7 +215,7 @@ bool Queue<T>::Iterator::operator!=(const Iterator& iterator) const {
 }
 
 template<class T>
-Queue<T>::Iterator& Queue<T>::Iterator::operator++() {
+typename Queue<T>::Iterator& Queue<T>::Iterator::operator++() {
     if(*this == queue->end()) {
         throw InvalidOperation();
     }
@@ -232,13 +232,13 @@ T& Queue<T>::Iterator::operator*() {
 }
 
 template<class T>
-Queue<T>::Iterator Queue<T>::begin() {
-    return Iterator(m_head);
+typename Queue<T>::Iterator Queue<T>::begin() {
+    return Iterator(this, m_head);
 }
 
 template<class T>
-Queue<T>::Iterator Queue<T>::end() {
-    return Iterator(nullptr);
+typename Queue<T>::Iterator Queue<T>::end() {
+    return Iterator(this, nullptr);
 }
 
 template<class T>
@@ -283,7 +283,7 @@ bool Queue<T>::ConstIterator::operator!=(const ConstIterator& constIterator) con
 }
 
 template<class T>
-Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++() {
+typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++() {
     if(*this == queue->end()) {
         throw InvalidOperation();
     }
@@ -300,13 +300,13 @@ const T& Queue<T>::ConstIterator::operator*() const {
 }
 
 template<class T>
-Queue<T>::ConstIterator Queue<T>::begin() const {
-    return ConstIterator(m_head);
+typename Queue<T>::ConstIterator Queue<T>::begin() const {
+    return ConstIterator(this ,m_head);
 }
 
 template<class T>
-Queue<T>::ConstIterator Queue<T>::end() const {
-    return ConstIterator(nullptr);
+typename Queue<T>::ConstIterator Queue<T>::end() const {
+    return ConstIterator(this, nullptr);
 }
 
 template<class T, class Function>

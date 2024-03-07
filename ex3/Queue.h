@@ -285,14 +285,6 @@ void transform(Queue<T>& queue, Function function) {
     }
 }
 
-// template<class T, class Function> //CHECK IF NEEDED
-// T& reduce(const Queue<T>& queue, T& value, Function function) {
-//     for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it) {
-//         value = function(*it, value);
-//     }
-//     return value;
-// }
-
 template<class T, class Function>
 T reduce(const Queue<T>& queue, const T& value, Function function) {
     T producedValue = value;

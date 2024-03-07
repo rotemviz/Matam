@@ -1,13 +1,21 @@
 #ifndef QUEUE
 #define QUEUE
 
-#include "Node.h"
-
 template<class T>
 class Queue {
 
-    Node<T>* m_head;
-    Node<T>* m_tail;
+    class Node {
+    
+        friend class Queue<T>;
+        T data;
+        Node* next;
+    
+        Node(const T& givenData);
+        ~Node() = default;
+    };
+
+    Node* m_head;
+    Node* m_tail;
     int m_size;
 
 public:
@@ -33,6 +41,11 @@ public:
 };
 
 template<class T>
+Queue<T>::Node::Node(const T& givenData) : 
+    data(givenData), next(nullptr)
+{}
+
+template<class T>
 Queue<T>::Queue() :
     m_head(nullptr), m_tail(m_head), m_size(0)
 {}
@@ -45,12 +58,12 @@ Queue<T>::Queue(const Queue<T>& queue) : {
         m_size = 0;
     }
     else {
-        m_head = new Node<T>(queue.m_head->data);
-        Node<T>* tempPointerOne = m_head;
-        Node<T>* tempPointerTwo = queue.m_head->next;
+        m_head = new Node(queue.m_head->data);
+        Node* tempPointerOne = m_head;
+        Node* tempPointerTwo = queue.m_head->next;
         try {
             while (tempPointerTwo != nullptr) {
-                tempPointerOne->next = new Node<T>(tempPointerTwo->data);
+                tempPointerOne->next = new Node(tempPointerTwo->data);
                 tempPointerOne = tempPointerOne->next;
                 tempPointerTwo = tempPointerTwo->next;
             }
@@ -59,7 +72,7 @@ Queue<T>::Queue(const Queue<T>& queue) : {
         }
         catch(const std::bad_alloc&) {
             while(m_head != nullptr) {
-                Node<T>* nodeToRemove = m_head;
+                Node* nodeToRemove = m_head;
                 m_head = m_head->next;
                 delete nodeToRemove;
             }
@@ -71,7 +84,7 @@ Queue<T>::Queue(const Queue<T>& queue) : {
 template<class T>
 Queue<T>::~Queue() {
     while(m_head != nullptr) {
-        Node<T>* tempPointer = m_head;
+        Node* tempPointer = m_head;
         m_head = m_head->next;
         delete tempPointer;
     }
@@ -85,18 +98,18 @@ Queue<T>& Queue<T>::operator=(const Queue<T>& queue) {
         m_size = queue.m_size;
         return *this;
     }
-    Node<T>* headHolder = new Node<T>(queue.m_head->data);
-    Node<T>* tempPointerOne = headHolder;
-    Node<T>* tempPointerTwo = queue.m_head->next;
+    Node* headHolder = new Node(queue.m_head->data);
+    Node* tempPointerOne = headHolder;
+    Node* tempPointerTwo = queue.m_head->next;
     try {
         while(tempPointerTwo != nullptr) {
-            Node<T>* newNode = new Node<T>(tempPointerTwo->data);
+            Node* newNode = new Node(tempPointerTwo->data);
             tempPointerOne->next = newNode;
             tempPointerOne = tempPointerOne->next;
             tempPointerTwo = tempPointerTwo->next;
         }
         tempPointerOne->next = nullptr;
-        Node<T>* tailHolder = tempPointerOne;
+        Node* tailHolder = tempPointerOne;
         tempPointerOne = m_head;
         while(tempPointerOne != nullptr) {
             tempPointerTwo = m_head->next;
@@ -121,13 +134,13 @@ Queue<T>& Queue<T>::operator=(const Queue<T>& queue) {
 template<class T>
 void Queue<T>::pushBack(const T& data) {
     if(m_size == 0) {
-        Node<T>* newNode = new Node<T>(data);
+        Node* newNode = new Node(data);
         m_tail = newNode;
         m_head = m_tail;
         m_size++;
         return;
     }
-    Node<T>* newNode = new Node<T>(data);
+    Node* newNode = new Node(data);
     m_tail->next = newNode;
     m_tail = newNode;
     m_size++;
@@ -148,7 +161,7 @@ void Queue<T>::popFront() {
     if(m_size == 0) {
         throw EmptyQueue();
     }
-    Node<T>* tempPoiter = m_head;
+    Node* tempPoiter = m_head;
     m_head = m_head->next;
     delete tempPoiter;
     m_size--;
@@ -163,8 +176,8 @@ template<class T>
 class Queue<T>::Iterator {
 
     Queue<T>* queue;
-    Node<T>* node;
-    Iterator(const Queue<T>* queue, Node<T>* node);
+    Node* node;
+    Iterator(const Queue<T>* queue, Node* node);
     friend class Queue<T>;
 
 public:
@@ -181,7 +194,7 @@ public:
 };
 
 template<class T>
-Queue<T>::Iterator::Iterator(const Queue<T>* queue, Node<T>* node) : 
+Queue<T>::Iterator::Iterator(const Queue<T>* queue, Node* node) : 
     queue(queue), node(node)
 {}
 
@@ -231,8 +244,8 @@ Queue<T>::Iterator Queue<T>::end() {
 template<class T>
 class Queue<T>::ConstIterator {
 
-    const Node<T>* node;
-    ConstIterator(const Queue<T>* queue, const Node<T>* node);
+    const Node* node;
+    ConstIterator(const Queue<T>* queue, const Node* node);
     friend class Queue<T>;
 
 public:
@@ -249,7 +262,7 @@ public:
 };
 
 template<class T>
-Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node<T>* node) : 
+Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node* node) : 
     queue(queue), node(node)
 {}
 

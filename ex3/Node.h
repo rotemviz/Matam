@@ -7,8 +7,7 @@ class Node {
     friend class Queue<T>;
     T data;
     Node<T>* next;
-
-public:
+    
     Node(const T& givenData);
     ~Node() = default;
 };

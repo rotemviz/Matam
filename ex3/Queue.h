@@ -110,7 +110,6 @@ Queue<T>& Queue<T>::operator=(const Queue& queue) {
             tempPointerOne = tempPointerOne->next;
             tempPointerTwo = tempPointerTwo->next;
         }
-        tempPointerOne->next = nullptr;
         Node* tailHolder = tempPointerOne;
         tempPointerOne = m_head;
         while(tempPointerOne != nullptr) {
@@ -144,17 +143,23 @@ void Queue<T>::pushBack(const T& data) {
     }
     Node* newNode = new Node(data);
     m_tail->next = newNode;
-    m_tail = newNode;
+    m_tail = m_tail->next;
     m_size++;
 }
 
 template<class T>
 T& Queue<T>::front() {
+    if(m_size == 0) {
+        throw EmptyQueue();
+    }
     return m_head->data;
 }
 
 template<class T>
 const T& Queue<T>::front() const {
+    if(m_size == 0) {
+        throw EmptyQueue();
+    }
     return m_head->data;
 }
 
@@ -163,9 +168,9 @@ void Queue<T>::popFront() {
     if(m_size == 0) {
         throw EmptyQueue();
     }
-    Node* tempPoiter = m_head;
+    Node* tempPointer = m_head;
     m_head = m_head->next;
-    delete tempPoiter;
+    delete tempPointer;
     m_size--;
 }
 
@@ -202,9 +207,6 @@ Queue<T>::Iterator::Iterator(Queue<T>* queue, Node* node) :
 
 template<class T>
 bool Queue<T>::Iterator::operator==(const Iterator& iterator) const {
-    if(m_node == nullptr) {
-        throw InvalidOperation();
-    }
     return m_node == iterator.m_node;
 }
 
@@ -268,9 +270,6 @@ Queue<T>::ConstIterator::ConstIterator(const Queue* queue, const Node* node) :
 
 template<class T>
 bool Queue<T>::ConstIterator::operator==(const ConstIterator& constIterator) const {
-    if(m_node == nullptr) {
-        throw InvalidOperation();
-    }
     return m_node == constIterator.m_node;
 }
 

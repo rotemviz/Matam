@@ -13,7 +13,9 @@ HealthPoints& HealthPoints::operator+=(int hp) {
         else {
             m_hp = newHp;
         }
+        return *this;
     }
+    *this-=(-1*hp);
     return *this;
 }
 
@@ -26,7 +28,9 @@ HealthPoints& HealthPoints::operator-=(int hp) {
         else {
             m_hp = newHp;
         }
+        return *this;
     }
+    *this+=(-1*hp);
     return *this;
 }
 

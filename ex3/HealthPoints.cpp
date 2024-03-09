@@ -60,7 +60,7 @@ HealthPoints operator+(int hp, const HealthPoints& healthPoints) {
     return HealthPoints(healthPoints)+=hp;
 }
 
-HealthPoints HealthPoints::operator-(int hp) const {
+HealthPoints HealthPoints::operator-(int hp) const { //check it
     return HealthPoints(*this)-=hp;
 }
 

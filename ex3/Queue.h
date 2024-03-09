@@ -183,7 +183,7 @@ class Queue<T>::Iterator {
 
     Queue* m_queue;
     Node* m_node;
-    Iterator(Queue* queue, Node* node);
+    Iterator(Queue<T>* queue, Node* node);
     friend class Queue;
 
 public:
@@ -200,7 +200,7 @@ public:
 };
 
 template<class T>
-Queue<T>::Iterator::Iterator(Queue* queue, Node* node) : 
+Queue<T>::Iterator::Iterator(Queue<T>* queue, Node* node) : 
     m_queue(queue), m_node(node)
 {}
 
@@ -246,7 +246,7 @@ class Queue<T>::ConstIterator {
 
     const Queue* m_queue;
     const Node* m_node;
-    ConstIterator(const Queue* m_queue, const Node* node);
+    ConstIterator(const Queue<T>* m_queue, const Node* node);
     friend class Queue;
 
 public:
@@ -263,7 +263,7 @@ public:
 };
 
 template<class T>
-Queue<T>::ConstIterator::ConstIterator(const Queue* queue, const Node* node) : 
+Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node* node) : 
     m_queue(queue), m_node(node)
 {}
 

@@ -47,12 +47,12 @@ Queue<T>::Node::Node(const T& givenData) :
 
 template<class T>
 Queue<T>::Queue() :
-    m_head(nullptr), m_tail(m_head), m_size(0)
+    m_head(nullptr), m_tail(nullptr), m_size(0)
 {}
 
 template<class T>
 Queue<T>::Queue(const Queue& queue) : 
-    m_head(nullptr), m_tail(m_head), m_size(0)
+    m_head(nullptr), m_tail(nullptr), m_size(0)
 {
     if(queue.m_size > 0) {
         m_head = new Node(queue.m_head->data);

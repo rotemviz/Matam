@@ -5,27 +5,41 @@ HealthPoints::HealthPoints(int maxHP) :
 {}
 
 HealthPoints& HealthPoints::operator+=(int hp) {
+    int newHp = m_hp + hp;
     if(hp > 0) {
-        int newHp = m_hp + hp;
         if (newHp >= m_maxHP) {
             m_hp = m_maxHP;
         }
         else {
             m_hp = newHp;
         }
+        return *this;
+    }
+    if(newHp <= 0) {
+        m_hp = 0;
+    }
+    else {
+        m_hp = newHp;
     }
     return *this;
 }
 
 HealthPoints& HealthPoints::operator-=(int hp) {
+    int newHp = m_hp - hp;
     if(hp > 0) {
-        int newHp = m_hp - hp;
         if(newHp <= 0) {
             m_hp = 0;
         }
         else {
             m_hp = newHp;
         }
+        return *this;
+    }
+    if (newHp >= m_maxHP) {
+        m_hp = m_maxHP;
+    }
+    else {
+        m_hp = newHp;
     }
     return *this;
 }

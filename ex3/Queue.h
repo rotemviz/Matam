@@ -11,6 +11,8 @@ class Queue {
         Node* next;
     
         Node(const T& givenData);
+        Node(const Node& node) = delete;
+        Node& operator=(const Node& node) = delete;
         ~Node() = default;
     };
 
@@ -182,10 +184,10 @@ int Queue<T>::size() const {
 template<class T>
 class Queue<T>::Iterator {
 
-    Queue<T>* m_queue;
+    Queue* m_queue;
     Node* m_node;
     Iterator(Queue* queue, Node* node);
-    friend class Queue<T>;
+    friend class Queue;
 
 public:
     bool operator==(const Iterator& iterator) const;
@@ -201,7 +203,7 @@ public:
 };
 
 template<class T>
-Queue<T>::Iterator::Iterator(Queue<T>* queue, Node* node) : 
+Queue<T>::Iterator::Iterator(Queue* queue, Node* node) : 
     m_queue(queue), m_node(node)
 {}
 

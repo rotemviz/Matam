@@ -15,12 +15,7 @@ HealthPoints& HealthPoints::operator+=(int hp) {
         }
         return *this;
     }
-    if(newHp <= 0) {
-        m_hp = 0;
-    }
-    else {
-        m_hp = newHp;
-    }
+    *this-=(-hp);
     return *this;
 }
 
@@ -35,12 +30,7 @@ HealthPoints& HealthPoints::operator-=(int hp) {
         }
         return *this;
     }
-    if (newHp >= m_maxHP) {
-        m_hp = m_maxHP;
-    }
-    else {
-        m_hp = newHp;
-    }
+    *this+=(-hp);
     return *this;
 }
 

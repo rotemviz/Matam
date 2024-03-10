@@ -11,6 +11,8 @@ class Queue {
         Node* next;
     
         Node(const T& givenData);
+        Node(const Node& node) = delete;
+        Node& operator=(cosnt Node& node) = delete;
         ~Node() = default;
     };
 

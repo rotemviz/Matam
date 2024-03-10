@@ -7,12 +7,12 @@ class Queue {
     class Node {
     
         friend class Queue;
-        T data;
-        Node* next;
-    
+        T m_data;
+        Node* m_next;
+
         Node(const T& givenData);
         Node(const Node& node) = delete;
-        Node& operator=(cosnt Node& node) = delete;
+        Node& operator=(const Node& node) = delete;
         ~Node() = default;
     };
 
@@ -44,7 +44,7 @@ public:
 
 template<class T>
 Queue<T>::Node::Node(const T& givenData) : 
-    data(givenData), next(nullptr)
+    m_data(givenData), m_next(nullptr)
 {}
 
 template<class T>
@@ -57,23 +57,16 @@ Queue<T>::Queue(const Queue& queue) :
     m_head(nullptr), m_tail(nullptr), m_size(0)
 {
     if(queue.m_size > 0) {
-        m_head = new Node(queue.m_head->data);
-        Node* tempPointerOne = m_head;
-        Node* tempPointerTwo = queue.m_head->next;
+        Node* tempPointer = queue.m_head;
         try {
-            while (tempPointerTwo != nullptr) {
-                tempPointerOne->next = new Node(tempPointerTwo->data);
-                tempPointerOne = tempPointerOne->next;
-                tempPointerTwo = tempPointerTwo->next;
+            while (tempPointer != nullptr) {
+                this->pushBack(tempPointer->m_data);
+                tempPointer = tempPointer->m_next;
             }
-            m_tail = tempPointerOne;
-            m_size = queue.m_size;
         }
         catch(const std::bad_alloc&) {
             while(m_head != nullptr) {
-                Node* nodeToRemove = m_head;
-                m_head = m_head->next;
-                delete nodeToRemove;
+                this->popFront();
             }
             throw;
         }
@@ -83,9 +76,7 @@ Queue<T>::Queue(const Queue& queue) :
 template<class T>
 Queue<T>::~Queue() {
     while(m_head != nullptr) {
-        Node* tempPointer = m_head;
-        m_head = m_head->next;
-        delete tempPointer;
+        this->popFront();
     }
 }
 
@@ -96,24 +87,24 @@ Queue<T>& Queue<T>::operator=(const Queue& queue) {
     }
     if(queue.m_size == 0) {
         m_head = nullptr;
-        m_tail = m_head;
+        m_tail = nullptr;
         m_size = queue.m_size;
         return *this;
     }
-    Node* headHolder = new Node(queue.m_head->data);
+    Node* headHolder = new Node(queue.m_head->m_data);
     Node* tempPointerOne = headHolder;
-    Node* tempPointerTwo = queue.m_head->next;
+    Node* tempPointerTwo = queue.m_head->m_next;
     try {
         while(tempPointerTwo != nullptr) {
-            Node* newNode = new Node(tempPointerTwo->data);
-            tempPointerOne->next = newNode;
-            tempPointerOne = tempPointerOne->next;
-            tempPointerTwo = tempPointerTwo->next;
+            Node* newNode = new Node(tempPointerTwo->m_data);
+            tempPointerOne->m_next = newNode;
+            tempPointerOne = tempPointerOne->m_next;
+            tempPointerTwo = tempPointerTwo->m_next;
         }
         Node* tailHolder = tempPointerOne;
         tempPointerOne = m_head;
         while(tempPointerOne != nullptr) {
-            tempPointerTwo = tempPointerOne->next;
+            tempPointerTwo = tempPointerOne->m_next;
             delete tempPointerOne;
             tempPointerOne = tempPointerTwo;
         }
@@ -123,7 +114,7 @@ Queue<T>& Queue<T>::operator=(const Queue& queue) {
     }
     catch(const std::bad_alloc&) {
         while(headHolder != nullptr) {
-            tempPointerOne = headHolder->next;
+            tempPointerOne = headHolder->m_next;
             delete headHolder;
             headHolder = tempPointerOne;
         }
@@ -142,8 +133,8 @@ void Queue<T>::pushBack(const T& data) {
         return;
     }
     Node* newNode = new Node(data);
-    m_tail->next = newNode;
-    m_tail = m_tail->next;
+    m_tail->m_next = newNode;
+    m_tail = m_tail->m_next;
     m_size++;
 }
 
@@ -152,7 +143,7 @@ T& Queue<T>::front() {
     if(m_size == 0) {
         throw EmptyQueue();
     }
-    return m_head->data;
+    return m_head->m_data;
 }
 
 template<class T>
@@ -160,7 +151,7 @@ const T& Queue<T>::front() const {
     if(m_size == 0) {
         throw EmptyQueue();
     }
-    return m_head->data;
+    return m_head->m_data;
 }
 
 template<class T> 
@@ -169,7 +160,7 @@ void Queue<T>::popFront() {
         throw EmptyQueue();
     }
     Node* tempPointer = m_head;
-    m_head = m_head->next;
+    m_head = m_head->m_next;
     delete tempPointer;
     m_size--;
     if(m_size == 0) {
@@ -223,7 +214,7 @@ typename Queue<T>::Iterator& Queue<T>::Iterator::operator++() {
     if(*this == m_queue->end()) {
         throw InvalidOperation();
     }
-    m_node = m_node->next;
+    m_node = m_node->m_next;
     return *this;
 }
 
@@ -232,7 +223,7 @@ T& Queue<T>::Iterator::operator*() {
     if(*this == m_queue->end()) {
         throw InvalidOperation();
     }
-    return m_node->data;
+    return m_node->m_data;
 }
 
 template<class T>
@@ -286,7 +277,7 @@ typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++() {
     if(*this == m_queue->end()) {
         throw InvalidOperation();
     }
-    m_node = m_node->next;
+    m_node = m_node->m_next;
     return *this;
 }
 
@@ -295,7 +286,7 @@ const T& Queue<T>::ConstIterator::operator*() const {
     if(*this == m_queue->end()) {
         throw InvalidOperation();
     }
-    return m_node->data;
+    return m_node->m_data;
 }
 
 template<class T>

@@ -1,38 +1,327 @@
-#ifndef HEALTH_POINTS
-#define HEALTH_POINTS
+#ifndef QUEUE
+#define QUEUE
 
-#include <ostream>
-using std::ostream;
+template<class T>
+class Queue {
 
-class HealthPoints {
+    class Node {
+    
+        friend class Queue;
+        T m_data;
+        Node* m_next;
 
-    int m_maxHP;
-    int m_hp;
-    static const int DEFAULT_MAX_HP = 100;
+        Node(const T& givenData);
+        Node(const Node& node) = delete;
+        Node& operator=(const Node& node) = delete;
+        ~Node() = default;
+    };
+
+    Node* m_head;
+    Node* m_tail;
+    int m_size;
 
 public:
-    HealthPoints(int maxHP = DEFAULT_MAX_HP);
-    ~HealthPoints() = default;
-    HealthPoints(const HealthPoints& healthPoints) = default;
-    HealthPoints& operator=(const HealthPoints& hp) = default;
-    int getHP() const;
-    int getMaxHP() const;
-    HealthPoints& operator+=(int hp);
-    HealthPoints& operator-=(int hp);
-    HealthPoints operator-(int hp) const;
+    Queue();
+    Queue(const Queue& queue);
+    ~Queue();
+    Queue& operator=(const Queue& queue);
+    void pushBack(const T& data);
+    T& front();
+    const T& front() const;
+    void popFront();
+    int size() const;
 
-    class InvalidArgument{};
+    class Iterator;
+    Iterator begin();
+    Iterator end();
+
+    class ConstIterator;
+    ConstIterator begin() const;
+    ConstIterator end() const;
+
+    class EmptyQueue{};
 };
 
+template<class T>
+Queue<T>::Node::Node(const T& givenData) : 
+    m_data(givenData), m_next(nullptr)
+{}
 
-HealthPoints operator+(const HealthPoints& healthPoints, int hp);
-HealthPoints operator+(int hp, const HealthPoints& healthPoints);
-bool operator==(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
-bool operator!=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
-bool operator>(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
-bool operator<(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
-bool operator<=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
-bool operator>=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
-ostream& operator<<(ostream& os, const HealthPoints& healthPoints);
+template<class T>
+Queue<T>::Queue() :
+    m_head(nullptr), m_tail(nullptr), m_size(0)
+{}
+
+template<class T>
+Queue<T>::Queue(const Queue& queue) : 
+    m_head(nullptr), m_tail(nullptr), m_size(0)
+{
+    if(queue.m_size > 0) {
+        Node* tempPointer = queue.m_head;
+        try {
+            while (tempPointer != nullptr) {
+                this->pushBack(tempPointer->m_data);
+                tempPointer = tempPointer->m_next;
+            }
+        }
+        catch(const std::bad_alloc&) {
+            while(m_head != nullptr) {
+                this->popFront();
+            }
+            throw;
+        }
+    }
+}
+
+template<class T>
+Queue<T>::~Queue() {
+    while(m_head != nullptr) {
+        this->popFront();
+    }
+}
+
+template<class T>
+Queue<T>& Queue<T>::operator=(const Queue& queue) {
+    if(this == &queue) {
+        return *this;
+    }
+    if(queue.m_size == 0) {
+        m_head = nullptr;
+        m_tail = nullptr;
+        m_size = queue.m_size;
+        return *this;
+    }
+    Node* headHolder = new Node(queue.m_head->m_data);
+    Node* tempPointerOne = headHolder;
+    Node* tempPointerTwo = queue.m_head->m_next;
+    try {
+        while(tempPointerTwo != nullptr) {
+            Node* newNode = new Node(tempPointerTwo->m_data);
+            tempPointerOne->m_next = newNode;
+            tempPointerOne = tempPointerOne->m_next;
+            tempPointerTwo = tempPointerTwo->m_next;
+        }
+        Node* tailHolder = tempPointerOne;
+        while(m_head != nullptr) {
+            this->popFront();
+        }
+        m_head = headHolder;
+        m_tail = tailHolder;
+        m_size = queue.m_size;
+    }
+    catch(const std::bad_alloc&) {
+        Queue tempQueue;
+        tempQueue.m_head = headHolder;
+        tempQueue.m_size = queue.m_size;
+        while(tempQueue.m_head != nullptr) {
+            tempQueue.popFront();
+        }
+        throw;
+    }
+    return *this;
+}
+
+template<class T>
+void Queue<T>::pushBack(const T& data) {
+    if(m_size == 0) {
+        Node* newNode = new Node(data);
+        m_tail = newNode;
+        m_head = m_tail;
+        m_size++;
+        return;
+    }
+    Node* newNode = new Node(data);
+    m_tail->m_next = newNode;
+    m_tail = m_tail->m_next;
+    m_size++;
+}
+
+template<class T>
+T& Queue<T>::front() {
+    if(m_size == 0) {
+        throw EmptyQueue();
+    }
+    return m_head->m_data;
+}
+
+template<class T>
+const T& Queue<T>::front() const {
+    if(m_size == 0) {
+        throw EmptyQueue();
+    }
+    return m_head->m_data;
+}
+
+template<class T> 
+void Queue<T>::popFront() {
+    if(m_size == 0) {
+        throw EmptyQueue();
+    }
+    Node* tempPointer = m_head;
+    m_head = m_head->m_next;
+    delete tempPointer;
+    m_size--;
+    if(m_size == 0) {
+        m_tail = nullptr;
+    }
+}
+
+template<class T>
+int Queue<T>::size() const {
+    return m_size;
+}
+
+template<class T>
+class Queue<T>::Iterator {
+
+    Queue* m_queue;
+    Node* m_node;
+    Iterator(Queue<T>* queue, Node* node);
+    friend class Queue;
+
+public:
+    bool operator==(const Iterator& iterator) const;
+    bool operator!=(const Iterator& iterator) const;
+    Iterator& operator++();
+    T& operator*();
+
+    ~Iterator() = default;
+    Iterator(const Iterator& iterator) = default;
+    Iterator& operator=(const Iterator& iterator) = default;
+
+    class InvalidOperation{};
+};
+
+template<class T>
+Queue<T>::Iterator::Iterator(Queue<T>* queue, Node* node) : 
+    m_queue(queue), m_node(node)
+{}
+
+template<class T>
+bool Queue<T>::Iterator::operator==(const Iterator& iterator) const {
+    return m_node == iterator.m_node;
+}
+
+template<class T>
+bool Queue<T>::Iterator::operator!=(const Iterator& iterator) const { 
+    return !(*this == iterator);
+}
+
+template<class T>
+typename Queue<T>::Iterator& Queue<T>::Iterator::operator++() {
+    if(*this == m_queue->end()) {
+        throw InvalidOperation();
+    }
+    m_node = m_node->m_next;
+    return *this;
+}
+
+template<class T>
+T& Queue<T>::Iterator::operator*() {
+    if(*this == m_queue->end()) {
+        throw InvalidOperation();
+    }
+    return m_node->m_data;
+}
+
+template<class T>
+typename Queue<T>::Iterator Queue<T>::begin() {
+    return Iterator(this, m_head);
+}
+
+template<class T>
+typename Queue<T>::Iterator Queue<T>::end() {
+    return Iterator(this, nullptr);
+}
+
+template<class T>
+class Queue<T>::ConstIterator {
+
+    const Queue* m_queue;
+    const Node* m_node;
+    ConstIterator(const Queue<T>* m_queue, const Node* node);
+    friend class Queue;
+
+public:
+    bool operator==(const ConstIterator& iterator) const;
+    bool operator!=(const ConstIterator& iterator) const;
+    ConstIterator& operator++();
+    const T& operator*() const;
+
+    ~ConstIterator() = default;
+    ConstIterator(const ConstIterator& constIterator) = default;
+    ConstIterator& operator=(const ConstIterator& constIterator) = default;
+
+    class InvalidOperation{};
+};
+
+template<class T>
+Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node* node) : 
+    m_queue(queue), m_node(node)
+{}
+
+template<class T>
+bool Queue<T>::ConstIterator::operator==(const ConstIterator& constIterator) const {
+    return m_node == constIterator.m_node;
+}
+
+template<class T>
+bool Queue<T>::ConstIterator::operator!=(const ConstIterator& constIterator) const {
+    return !(*this == constIterator);
+}
+
+template<class T>
+typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++() {
+    if(*this == m_queue->end()) {
+        throw InvalidOperation();
+    }
+    m_node = m_node->m_next;
+    return *this;
+}
+
+template<class T>
+const T& Queue<T>::ConstIterator::operator*() const {
+    if(*this == m_queue->end()) {
+        throw InvalidOperation();
+    }
+    return m_node->m_data;
+}
+
+template<class T>
+typename Queue<T>::ConstIterator Queue<T>::begin() const {
+    return ConstIterator(this ,m_head);
+}
+
+template<class T>
+typename Queue<T>::ConstIterator Queue<T>::end() const {
+    return ConstIterator(this, nullptr);
+}
+
+template<class T, class Function>
+Queue<T> filter(const Queue<T>& queue, Function function) {
+    Queue<T> newQueue;
+    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it) {
+        if(function(*it)) {
+            newQueue.pushBack(*it);
+        }
+    }
+    return newQueue;
+}
+
+template<class T, class Function>
+void transform(Queue<T>& queue, Function function) {
+    for(typename Queue<T>::Iterator it = queue.begin(); it != queue.end(); ++it) {
+        *it = function(*it);
+    }
+}
+
+template<class T, class Function>
+T reduce(const Queue<T>& queue, const T& value, Function function) {
+    T producedValue = value;
+    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it) {
+        producedValue = function(*it, producedValue);
+    }
+    return producedValue;
+}
 
 #endif

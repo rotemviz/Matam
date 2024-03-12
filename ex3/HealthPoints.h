@@ -1,327 +1,173 @@
-#ifndef QUEUE
-#define QUEUE
+#ifndef HEALTH_POINTS
+#define HEALTH_POINTS
 
-template<class T>
-class Queue {
+#include <ostream>
+using std::ostream;
 
-    class Node {
-    
-        friend class Queue;
-        T m_data;
-        Node* m_next;
+class HealthPoints {
 
-        Node(const T& givenData);
-        Node(const Node& node) = delete;
-        Node& operator=(const Node& node) = delete;
-        ~Node() = default;
-    };
-
-    Node* m_head;
-    Node* m_tail;
-    int m_size;
+    int m_maxHP;
+    int m_hp;
+    static const int DEFAULT_MAX_HP = 100;
 
 public:
-    Queue();
-    Queue(const Queue& queue);
-    ~Queue();
-    Queue& operator=(const Queue& queue);
-    void pushBack(const T& data);
-    T& front();
-    const T& front() const;
-    void popFront();
-    int size() const;
+    /*
+     * C'tor of HealthPoints class
+     *
+     * @param name - The max number of health points.
+     * @return
+     *      A new instance of HealthPoints.
+    */
+    HealthPoints(int maxHP = DEFAULT_MAX_HP);
 
-    class Iterator;
-    Iterator begin();
-    Iterator end();
+    /*
+     * Explicitly telling the compiler to use the defualt methods of copy constuctor, destructor, and operator=
+    */
+    ~HealthPoints() = default;
+    HealthPoints(const HealthPoints& healthPoints) = default;
+    HealthPoints& operator=(const HealthPoints& hp) = default;
 
-    class ConstIterator;
-    ConstIterator begin() const;
-    ConstIterator end() const;
+    /*
+     * Gets the current health points of HealthPoints:
+     * 
+     * @return
+     *      The current health points.
+    */
+    int getHP() const;
 
-    class EmptyQueue{};
+    /*
+     * Get the max health points of HealthPoints:
+     * 
+     * @return
+     *      The max health points.
+    */
+    int getMaxHP() const;
+
+    /*
+     * Adds health points to the current HealthPoints, at most to the maximum health points:
+     * 
+     * @param hp - The health points to be added.
+     * @return
+     *      A reference to the HealthPoints object.
+    */
+    HealthPoints& operator+=(int hp);
+
+    /*
+     * reduces health points from the current HealthPoints, at most to zero:
+     * 
+     * @param hp - The health points to be reduced.
+     * @return
+     *      A reference to the HealthPoints object.
+    */
+    HealthPoints& operator-=(int hp);
+
+    /*
+     * reduces health points from a copy of the current HealthPoints, at most to zero:
+     * 
+     * @param hp - The health points to be reduced.
+     * @return
+     *      A new HealthPoints object.
+    */
+    HealthPoints operator-(int hp) const;
+
+    /* class to use for exceptions for a situation of an invalid argument given to a constuctor/operator */
+    class InvalidArgument{};
 };
 
-template<class T>
-Queue<T>::Node::Node(const T& givenData) : 
-    m_data(givenData), m_next(nullptr)
-{}
+/*
+ * Adds health points to a copy of the given HealthPoints , at most to the maximum health points of the given HealthPoints:
+ * 
+ * @param healthPoints - The given HealthPoints.
+ * @param hp - The health points to be reduced.
+ * @return
+ *      A new HealthPoints object.
+*/
+HealthPoints operator+(const HealthPoints& healthPoints, int hp);
 
-template<class T>
-Queue<T>::Queue() :
-    m_head(nullptr), m_tail(nullptr), m_size(0)
-{}
+/*
+ * Adds health points to a copy of the given HealthPoints , at most to the maximum health points of the given HealthPoints:
+ * 
+ * @param hp - The health points to be reduced.
+ * @param healthPoints - The given HealthPoints.
+ * @return
+ *      A new HealthPoints object.
+*/
+HealthPoints operator+(int hp, const HealthPoints& healthPoints);
 
-template<class T>
-Queue<T>::Queue(const Queue& queue) : 
-    m_head(nullptr), m_tail(nullptr), m_size(0)
-{
-    if(queue.m_size > 0) {
-        Node* tempPointer = queue.m_head;
-        try {
-            while (tempPointer != nullptr) {
-                this->pushBack(tempPointer->m_data);
-                tempPointer = tempPointer->m_next;
-            }
-        }
-        catch(const std::bad_alloc&) {
-            while(m_head != nullptr) {
-                this->popFront();
-            }
-            throw;
-        }
-    }
-}
+/*
+ * Checks if two given HealthPoints are equal:
+ * 
+ * @param healthPointsOne - The first HealthsPoint.
+ * @param healthPointsTwo - The second HealthPoints.
+ * @return
+ *      True if the two given HealthPoints are equal
+ *      False otherwise
+*/
+bool operator==(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-template<class T>
-Queue<T>::~Queue() {
-    while(m_head != nullptr) {
-        this->popFront();
-    }
-}
+/*
+ * Checks if two given HealthPoints are not equal:
+ * 
+ * @param healthPointsOne - The first HealthsPoint.
+ * @param healthPointsTwo - The second HealthPoints.
+ * @return
+ *      True if the two given HealthPoints are not equal
+ *      False otherwise
+*/
+bool operator!=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-template<class T>
-Queue<T>& Queue<T>::operator=(const Queue& queue) {
-    if(this == &queue) {
-        return *this;
-    }
-    if(queue.m_size == 0) {
-        m_head = nullptr;
-        m_tail = nullptr;
-        m_size = queue.m_size;
-        return *this;
-    }
-    Node* headHolder = new Node(queue.m_head->m_data);
-    Node* tempPointerOne = headHolder;
-    Node* tempPointerTwo = queue.m_head->m_next;
-    try {
-        while(tempPointerTwo != nullptr) {
-            Node* newNode = new Node(tempPointerTwo->m_data);
-            tempPointerOne->m_next = newNode;
-            tempPointerOne = tempPointerOne->m_next;
-            tempPointerTwo = tempPointerTwo->m_next;
-        }
-        Node* tailHolder = tempPointerOne;
-        while(m_head != nullptr) {
-            this->popFront();
-        }
-        m_head = headHolder;
-        m_tail = tailHolder;
-        m_size = queue.m_size;
-    }
-    catch(const std::bad_alloc&) {
-        Queue tempQueue;
-        tempQueue.m_head = headHolder;
-        tempQueue.m_size = queue.m_size;
-        while(tempQueue.m_head != nullptr) {
-            tempQueue.popFront();
-        }
-        throw;
-    }
-    return *this;
-}
+/*
+ * Checks if one given HealthPoints is bigger than another given HealthPoints:
+ * 
+ * @param healthPointsOne - The first HealthsPoint.
+ * @param healthPointsTwo - The other HealthPoints.
+ * @return
+ *      True if the first given HealthPoints is bigger than the other given HealthPoints
+ *      False otherwise
+*/
+bool operator>(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-template<class T>
-void Queue<T>::pushBack(const T& data) {
-    if(m_size == 0) {
-        Node* newNode = new Node(data);
-        m_tail = newNode;
-        m_head = m_tail;
-        m_size++;
-        return;
-    }
-    Node* newNode = new Node(data);
-    m_tail->m_next = newNode;
-    m_tail = m_tail->m_next;
-    m_size++;
-}
+/*
+ * Checks if one given HealthPoints is smaller than another given HealthPoints:
+ * 
+ * @param healthPointsOne - The first HealthsPoint.
+ * @param healthPointsTwo - The other HealthPoints.
+ * @return
+ *      True if the first given HealthPoints is smaller than the other given HealthPoints
+ *      False otherwise
+*/
+bool operator<(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-template<class T>
-T& Queue<T>::front() {
-    if(m_size == 0) {
-        throw EmptyQueue();
-    }
-    return m_head->m_data;
-}
+/*
+ * Checks if one given HealthPoints is smaller or equal to another given HealthPoints:
+ * 
+ * @param healthPointsOne - The first HealthsPoint.
+ * @param healthPointsTwo - The other HealthPoints.
+ * @return
+ *      True if the first given HealthPoints is smaller or equal to the other given HealthPoints
+ *      False otherwise
+*/
+bool operator<=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-template<class T>
-const T& Queue<T>::front() const {
-    if(m_size == 0) {
-        throw EmptyQueue();
-    }
-    return m_head->m_data;
-}
+/*
+ * Checks if one given HealthPoints is bigger or equal to another given HealthPoints:
+ * 
+ * @param healthPointsOne - The first HealthsPoint.
+ * @param healthPointsTwo - The other HealthPoints.
+ * @return
+ *      True if the first given HealthPoints is bigger or equal to the other given HealthPoints
+ *      False otherwise
+*/
+bool operator>=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-template<class T> 
-void Queue<T>::popFront() {
-    if(m_size == 0) {
-        throw EmptyQueue();
-    }
-    Node* tempPointer = m_head;
-    m_head = m_head->m_next;
-    delete tempPointer;
-    m_size--;
-    if(m_size == 0) {
-        m_tail = nullptr;
-    }
-}
-
-template<class T>
-int Queue<T>::size() const {
-    return m_size;
-}
-
-template<class T>
-class Queue<T>::Iterator {
-
-    Queue* m_queue;
-    Node* m_node;
-    Iterator(Queue<T>* queue, Node* node);
-    friend class Queue;
-
-public:
-    bool operator==(const Iterator& iterator) const;
-    bool operator!=(const Iterator& iterator) const;
-    Iterator& operator++();
-    T& operator*();
-
-    ~Iterator() = default;
-    Iterator(const Iterator& iterator) = default;
-    Iterator& operator=(const Iterator& iterator) = default;
-
-    class InvalidOperation{};
-};
-
-template<class T>
-Queue<T>::Iterator::Iterator(Queue<T>* queue, Node* node) : 
-    m_queue(queue), m_node(node)
-{}
-
-template<class T>
-bool Queue<T>::Iterator::operator==(const Iterator& iterator) const {
-    return m_node == iterator.m_node;
-}
-
-template<class T>
-bool Queue<T>::Iterator::operator!=(const Iterator& iterator) const { 
-    return !(*this == iterator);
-}
-
-template<class T>
-typename Queue<T>::Iterator& Queue<T>::Iterator::operator++() {
-    if(*this == m_queue->end()) {
-        throw InvalidOperation();
-    }
-    m_node = m_node->m_next;
-    return *this;
-}
-
-template<class T>
-T& Queue<T>::Iterator::operator*() {
-    if(*this == m_queue->end()) {
-        throw InvalidOperation();
-    }
-    return m_node->m_data;
-}
-
-template<class T>
-typename Queue<T>::Iterator Queue<T>::begin() {
-    return Iterator(this, m_head);
-}
-
-template<class T>
-typename Queue<T>::Iterator Queue<T>::end() {
-    return Iterator(this, nullptr);
-}
-
-template<class T>
-class Queue<T>::ConstIterator {
-
-    const Queue* m_queue;
-    const Node* m_node;
-    ConstIterator(const Queue<T>* m_queue, const Node* node);
-    friend class Queue;
-
-public:
-    bool operator==(const ConstIterator& iterator) const;
-    bool operator!=(const ConstIterator& iterator) const;
-    ConstIterator& operator++();
-    const T& operator*() const;
-
-    ~ConstIterator() = default;
-    ConstIterator(const ConstIterator& constIterator) = default;
-    ConstIterator& operator=(const ConstIterator& constIterator) = default;
-
-    class InvalidOperation{};
-};
-
-template<class T>
-Queue<T>::ConstIterator::ConstIterator(const Queue<T>* queue, const Node* node) : 
-    m_queue(queue), m_node(node)
-{}
-
-template<class T>
-bool Queue<T>::ConstIterator::operator==(const ConstIterator& constIterator) const {
-    return m_node == constIterator.m_node;
-}
-
-template<class T>
-bool Queue<T>::ConstIterator::operator!=(const ConstIterator& constIterator) const {
-    return !(*this == constIterator);
-}
-
-template<class T>
-typename Queue<T>::ConstIterator& Queue<T>::ConstIterator::operator++() {
-    if(*this == m_queue->end()) {
-        throw InvalidOperation();
-    }
-    m_node = m_node->m_next;
-    return *this;
-}
-
-template<class T>
-const T& Queue<T>::ConstIterator::operator*() const {
-    if(*this == m_queue->end()) {
-        throw InvalidOperation();
-    }
-    return m_node->m_data;
-}
-
-template<class T>
-typename Queue<T>::ConstIterator Queue<T>::begin() const {
-    return ConstIterator(this ,m_head);
-}
-
-template<class T>
-typename Queue<T>::ConstIterator Queue<T>::end() const {
-    return ConstIterator(this, nullptr);
-}
-
-template<class T, class Function>
-Queue<T> filter(const Queue<T>& queue, Function function) {
-    Queue<T> newQueue;
-    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it) {
-        if(function(*it)) {
-            newQueue.pushBack(*it);
-        }
-    }
-    return newQueue;
-}
-
-template<class T, class Function>
-void transform(Queue<T>& queue, Function function) {
-    for(typename Queue<T>::Iterator it = queue.begin(); it != queue.end(); ++it) {
-        *it = function(*it);
-    }
-}
-
-template<class T, class Function>
-T reduce(const Queue<T>& queue, const T& value, Function function) {
-    T producedValue = value;
-    for(typename Queue<T>::ConstIterator it = queue.begin(); it != queue.end(); ++it) {
-        producedValue = function(*it, producedValue);
-    }
-    return producedValue;
-}
+/*
+ * Print operator:
+ * 
+ * @param os - An ostream object.
+ * @param healthPoints - The HealthPoints to be printed.
+ * @return
+ *      A reference to an ostream object.
+*/
+ostream& operator<<(ostream& os, const HealthPoints& healthPoints);
 
 #endif

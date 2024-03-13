@@ -70,7 +70,7 @@ public:
     */
     HealthPoints operator-(const int hp) const;
 
-    /* class to use for exceptions for a situation of an invalid argument given to a constuctor/operator */
+    /* Class InvalidArgument to use as exceptions for a situation of an invalid argument given to a constuctor/operator */
     class InvalidArgument{};
 };
 

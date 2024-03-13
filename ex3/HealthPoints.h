@@ -50,7 +50,7 @@ public:
      * @return
      *      A reference to the HealthPoints object.
     */
-    HealthPoints& operator+=(int hp);
+    HealthPoints& operator+=(const int hp);
 
     /*
      * reduces health points from the current HealthPoints, at most to zero:
@@ -59,7 +59,7 @@ public:
      * @return
      *      A reference to the HealthPoints object.
     */
-    HealthPoints& operator-=(int hp);
+    HealthPoints& operator-=(const int hp);
 
     /*
      * reduces health points from a copy of the current HealthPoints, at most to zero:
@@ -68,7 +68,7 @@ public:
      * @return
      *      A new HealthPoints object.
     */
-    HealthPoints operator-(int hp) const;
+    HealthPoints operator-(const int hp) const;
 
     /* class to use for exceptions for a situation of an invalid argument given to a constuctor/operator */
     class InvalidArgument{};
@@ -82,7 +82,7 @@ public:
  * @return
  *      A new HealthPoints object.
 */
-HealthPoints operator+(const HealthPoints& healthPoints, int hp);
+HealthPoints operator+(const HealthPoints& healthPoints, const int hp);
 
 /*
  * Adds health points to a copy of the given HealthPoints , at most to the maximum health points of the given HealthPoints:
@@ -92,7 +92,7 @@ HealthPoints operator+(const HealthPoints& healthPoints, int hp);
  * @return
  *      A new HealthPoints object.
 */
-HealthPoints operator+(int hp, const HealthPoints& healthPoints);
+HealthPoints operator+(const int hp, const HealthPoints& healthPoints);
 
 /*
  * Checks if two given HealthPoints are equal:

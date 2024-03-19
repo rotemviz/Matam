@@ -32,7 +32,7 @@ public:
     */
     Player(const string& name, Behavior* behavior);
 
-    ~Player();
+    virtual ~Player();
 
     /*
      * Explicitly telling the compiler to use the default methods of copy constructor, destructor, and operator=

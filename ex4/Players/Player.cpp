@@ -1,18 +1,24 @@
 #include "Player.h"
 
-Player::Player(const string& name, Behavior* behavior) : 
-    m_name(name), m_level(START_LEVEL), m_force(START_FORCE), m_hp(), m_coins(START_COINS), m_behavior(behavior)
-{}
-
-Player::~Player() {
-    delete m_behavior;
+Behavior* createPlayerBehavior(const std::string& behavior) {
+    if(behavior == "Responsible") {
+        return new Responsible(behavior);
+    }
+    else if(behavior == "RiskTaking") {
+        return new RiskTaking(behavior);
+    }
 }
+
+Player::Player(const std::string& name, const std::string& behavior) : 
+    m_name(name), m_level(START_LEVEL), m_force(START_FORCE), m_hp(), 
+    m_coins(START_COINS), m_behavior(createPlayerBehavior(behavior))
+{}
 
 int Player::getLevel() const {
     return m_level;
 }
 
-string Player::getName() const {
+std::string Player::getName() const {
     return m_name;
 }
 
@@ -90,7 +96,7 @@ int Player::getCombatPower() const {
     return (this->getForce() + this->getLevel());
 }
 
-Warrior::Warrior(const string& name, Behavior* behavior, const string& job) : 
+Warrior::Warrior(const std::string& name, const std::string& behavior, const std::string& job) : 
     Player(name, behavior), m_job(job)
 {}
 
@@ -98,16 +104,16 @@ int Warrior::getCombatPower() const {
     return (this->getForce()*2 + this->getLevel());
 }
 
-string Warrior::getDescription() const {
+std::string Warrior::getDescription() const {
     return (this->getName() + ", " + m_job + " with " + m_behavior->getBehavior() + " behavior (level " 
     + std::to_string(this->getLevel()) + ", force " + std::to_string(this->getForce()) + ")");
 }
 
-Sorcerer::Sorcerer(const string& name, Behavior* behavior, const string& job) :
+Sorcerer::Sorcerer(const std::string& name, const std::string& behavior, const std::string& job) :
     Player(name, behavior), m_job(job)
 {}
 
-string Sorcerer::getDescription() const {
+std::string Sorcerer::getDescription() const {
     return (this->getName() + ", " + m_job + " with " + m_behavior->getBehavior() + " behavior (level " 
     + std::to_string(this->getLevel()) + ", force " + std::to_string(this->getForce()) + ")");
 }

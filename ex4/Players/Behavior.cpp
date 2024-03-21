@@ -1,14 +1,16 @@
 #include "Behavior.h"
+#include "Player.h"
 
-Behavior::Behavior(const string& behavior) : 
+
+Behavior::Behavior(const std::string& behavior) : 
     m_behavior(behavior)
 {}
 
-string Behavior::getBehavior() const {
+std::string Behavior::getBehavior() const {
     return m_behavior;
 }
 
-Responsible::Responsible(const string& behavior) : 
+Responsible::Responsible(const std::string& behavior) : 
     Behavior(behavior)
 {}
 
@@ -19,7 +21,7 @@ void Responsible::makePotionsMerchantMove(Player& player, int cost, int givenHP)
     }
 }
 
-RiskTaking::RiskTaking(const string& behavior) : 
+RiskTaking::RiskTaking(const std::string& behavior) : 
     Behavior(behavior)
 {}
 

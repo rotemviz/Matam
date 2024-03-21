@@ -6,10 +6,10 @@
 #include <memory>
 #include <string>
 
-using std::string;
+
 
 class Player {
-    string m_name;
+    std::string m_name;
     int m_level;
     int m_force;
     HealthPoints m_hp;
@@ -20,7 +20,7 @@ class Player {
     static const int GAME_MAX_LEVEL = 10;
 
 protected:
-    Behavior* m_behavior;
+    std::unique_ptr<Behavior> m_behavior;
 
 public:
     /*
@@ -30,9 +30,9 @@ public:
      * @return
      *      A new instance of Player.
     */
-    Player(const string& name, Behavior* behavior);
+    Player(const std::string& name, const std::string& behavior);
 
-    virtual ~Player();
+    virtual ~Player() = default;
 
     /*
      * Explicitly telling the compiler to use the default methods of copy constructor, destructor, and operator=
@@ -45,7 +45,7 @@ public:
      * 
      * @return - name of the player
     */
-    string getName() const;
+    std::string getName() const;
 
     /**
      * Gets the current level of the player
@@ -164,26 +164,26 @@ public:
      * 
      * @return - description of the player
     */
-    virtual string getDescription() const = 0;
+    virtual std::string getDescription() const = 0;
 };
 
 
 class Warrior : public Player {
-    string m_job;
+    std::string m_job;
 
 public:
-    Warrior(const string& name, Behavior* behavior, const string& job);
+    Warrior(const std::string& name, const std::string& behavior, const std::string& job);
 
-    string getDescription() const override;
+    std::string getDescription() const override;
     int getCombatPower() const override;
 };
 
 
 class Sorcerer : public Player {
-    string m_job;
+    std::string m_job;
 
 public:
 
-    Sorcerer(const string& name, Behavior* behavior, const string& job);
-    string getDescription() const override;
+    Sorcerer(const std::string& name, const std::string& behavior, const std::string& job);
+    std::string getDescription() const override;
 };

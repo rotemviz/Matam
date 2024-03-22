@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "HealthPoints.h"
@@ -6,6 +5,10 @@
 #include <memory>
 #include <string>
 
+enum class Job {
+    Warrior,
+    Sorcerer
+};
 
 
 class Player {
@@ -74,6 +77,13 @@ public:
      * @return - coins of the player
     */
     int getCoins() const;
+
+    /**
+     * Gets the job of the player
+     * 
+     * @return - job of the player
+    */
+    virtual Job getJob() const = 0;
 
     /*
      * Raises the player's level by one, unless his level is the max level:
@@ -176,6 +186,7 @@ public:
 
     std::string getDescription() const override;
     int getCombatPower() const override;
+    Job getJob() const override { return Job::Warrior; }
 };
 
 
@@ -186,4 +197,6 @@ public:
 
     Sorcerer(const std::string& name, const std::string& behavior, const std::string& job);
     std::string getDescription() const override;
+    Job getJob() const override { return Job::Sorcerer; }
+
 };

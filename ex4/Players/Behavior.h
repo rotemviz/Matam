@@ -11,13 +11,13 @@ protected:
     std::string m_behavior;
 public:
     Behavior(const std::string& behavior);
-    
-    ~Behavior() = default;
-    Behavior(const Behavior& behavior) = default; // maybe will change
-    Behavior& operator=(const Behavior& behavior) = default; // maybe will change
+    Behavior(const Behavior& behavior) = default;
+    Behavior& operator=(const Behavior& behavior) = default;
+
+    virtual ~Behavior() = default;
 
     std::string getBehavior() const;
-    virtual void makePotionsMerchantMove(Player& player, int cost, int givenHP) = 0;
+    virtual int makePotionsMerchantMove(Player& player, int cost, int givenHP) = 0;
 };
 
 
@@ -25,11 +25,12 @@ class Responsible : public Behavior {
 
 public:
     Responsible(const std::string& behavior);
-    ~Responsible() = default;
-    Responsible(const Responsible& responsible) = default; // maybe will change
-    Responsible& operator=(const Responsible& responsible) = default; // maybe will change
+    Responsible(const Responsible& responsible) = default;
+    Responsible& operator=(const Responsible& responsible) = default;
 
-    void makePotionsMerchantMove(Player& player, int cost, int givenHP) override;
+    ~Responsible() = default;
+
+    int makePotionsMerchantMove(Player& player, int cost, int givenHP) override;
 
 };
 
@@ -38,11 +39,12 @@ class RiskTaking : public Behavior {
 
 public:
     RiskTaking(const std::string& behavior);
-    ~RiskTaking() = default;
-    RiskTaking(const RiskTaking& riskTaking) = default; // maybe will change
-    RiskTaking& operator=(const RiskTaking& riskTaking) = default; // maybe will change
+    RiskTaking(const RiskTaking& riskTaking) = default;
+    RiskTaking& operator=(const RiskTaking& riskTaking) = default;
 
-    void makePotionsMerchantMove(Player& player, int cost, int givenHP) override;
+    ~RiskTaking() = default;
+
+    int makePotionsMerchantMove(Player& player, int cost, int givenHP) override;
 
 };
 

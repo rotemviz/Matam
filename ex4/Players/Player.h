@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 
+using std::string;
 
 
 class Player {
@@ -32,13 +33,13 @@ public:
     */
     Player(const std::string& name, const std::string& behavior);
 
-    virtual ~Player() = default;
-
     /*
      * Explicitly telling the compiler to use the default methods of copy constructor, destructor, and operator=
     */
     Player(const Player& player) = default;
     Player& operator=(const Player& player) = default;
+
+    virtual ~Player() = default;
 
     /**
      * Gets the name of the player
@@ -157,6 +158,10 @@ public:
 
     int getMaxHP() const;
 
+    int usePotionsMerchantMove(int cost, int givenHP);
+
+    virtual int solarEclipseEffect();
+
     virtual int getCombatPower() const;
 
     /**
@@ -165,6 +170,8 @@ public:
      * @return - description of the player
     */
     virtual std::string getDescription() const = 0;
+
+    virtual const std::string& getJob() const = 0;
 };
 
 
@@ -172,10 +179,14 @@ class Warrior : public Player {
     std::string m_job;
 
 public:
-    Warrior(const std::string& name, const std::string& behavior, const std::string& job);
+    Warrior(const std::string& name, const std::string& behavior);
+    Warrior(const Warrior& other) = default;
+    Warrior& operator=(const Warrior& other) = default;
+    ~Warrior() = default;
 
     std::string getDescription() const override;
     int getCombatPower() const override;
+    const std::string& getJob() const override;
 };
 
 
@@ -184,6 +195,12 @@ class Sorcerer : public Player {
 
 public:
 
-    Sorcerer(const std::string& name, const std::string& behavior, const std::string& job);
+    Sorcerer(const std::string& name, const std::string& behavior);
+    Sorcerer(const Sorcerer& other) = default;
+    Sorcerer& operator=(const Sorcerer& other) = default;
+    ~Sorcerer() = default;
+
+    virtual int solarEclipseEffect() override;
     std::string getDescription() const override;
+    const std::string& getJob() const override;
 };

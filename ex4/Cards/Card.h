@@ -7,6 +7,8 @@
 #include <string>
 
 class Card {
+
+protected:
     std::string m_cardName;
 
 public:
@@ -25,7 +27,7 @@ public:
 
 
     /**
-     * Default C'tor.
+     * Default Destructor.
      */
     virtual ~Card() = default;
 
@@ -37,18 +39,13 @@ public:
     Card& operator=(const Card& other) = default;
 
     /**
-     * Gets the name of the card
-     * 
-     * @return - the name of the card
-    */
-    std::string getCardName() const;
-
-    /**
      * Gets the description of the card
      * 
      * @return - the description of the card
     */
-    virtual std::string getDescription() const = 0;
+    virtual std::string getDescription() const;
+
+    virtual void applyCard(Player& player) = 0;
 
 }; 
 #endif // Card_H

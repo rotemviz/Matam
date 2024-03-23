@@ -2,7 +2,7 @@
 
 
 Encounter::Encounter(const std::string& monster, int power, int loot, int damage) :
-    Card("Encounter"), m_monsterName(monster), m_power(power), m_loot(loot), m_damage(damage)
+    Card(monster), m_power(power), m_loot(loot), m_damage(damage)
 {}
 
 int Encounter::getPower() const {
@@ -18,8 +18,21 @@ int Encounter::getDamage() const {
 }
 
 std::string Encounter::getDescription() const {
-    return m_monsterName + " (power " + std::to_string(m_power) + ", loot " + std::to_string(m_loot) + ", damage " 
+    return m_cardName + " (power " + std::to_string(m_power) + ", loot " + std::to_string(m_loot) + ", damage " 
     + std::to_string(m_damage) + ")";
+}
+
+void Encounter::applyCard(Player& player) {
+    int playerCombatPower = player.getCombatPower();
+    if(playerCombatPower > getPower()) {
+        player.levelUp();
+        player.addCoins(m_loot);
+        printTurnOutcome(getEncounterWonMessage(player, m_loot));
+    }
+    else {
+        player.damage(m_damage);
+        printTurnOutcome(getEncounterLostMessage(player, m_damage));
+    }
 }
 
 Goblin::Goblin() : 
@@ -34,24 +47,16 @@ Dragon::Dragon() :
     Encounter("Dragon", POWER, LOOT, DAMAGE)
 {}
 
-void Gang::addMonster(const std::string& monster) {
-    if(monster == "Goblin") {
-        gangMonsters.push_back(std::unique_ptr<Encounter>(new Goblin()));
-    }
-    else if(monster == "Giant") {
-        gangMonsters.push_back(std::unique_ptr<Encounter>(new Giant()));
-    }
-    else if(monster == "Dragon") {
-        gangMonsters.push_back(std::unique_ptr<Encounter>(new Dragon()));
-    }
-    m_power+=gangMonsters.back()->getPower();
-    m_loot+=gangMonsters.back()->getLoot();
-    m_damage+=gangMonsters.back()->getDamage();
-}
-
-Gang::Gang() : 
+Gang::Gang(std::vector<std::unique_ptr<Encounter>> monsters) : 
     Encounter("Gang", 0, 0, 0), gangMonsters()
-{}
+{
+    for(int i=0; i<monsters.size(); ++i) {
+        gangMonsters[i] = std::move(monsters[i]);
+        m_damage+=monsters[i]->getDamage();
+        m_loot+=monsters[i]->getLoot();
+        m_power+=monsters[i]->getPower();
+    }
+}
 
 std::string Gang::getDescription() const {
     return "Gang of " + std::to_string(gangMonsters.size()) + "members (power " + std::to_string(m_power) + ", loot " 

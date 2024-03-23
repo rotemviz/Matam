@@ -8,7 +8,6 @@
 
 
 class Encounter : public Card {
-    std::string m_monsterName;
 
 protected:
     int m_power;
@@ -32,7 +31,7 @@ public:
     Encounter(const Encounter& encounter) = default;
 
     /**
-     * Default C'tor.
+     * Default Destructor.
      */
     virtual ~Encounter() = default;
 
@@ -65,6 +64,8 @@ public:
     virtual int getDamage() const;
 
     virtual std::string getDescription() const override;
+
+    virtual void applyCard(Player& player) override;
 };
 
 
@@ -76,10 +77,9 @@ class Goblin : public Encounter {
 public:
 
     Goblin();
-
     Goblin(const Goblin& goblin) = default;
-
     Goblin& operator=(const Goblin& goblin) = default;
+    ~Goblin() = default;
 };
 
 
@@ -91,10 +91,9 @@ class Giant : public Encounter {
 public:
 
     Giant();
-
     Giant(const Giant& giant) = default;
-
     Giant& operator=(const Giant& giant) = default;
+    ~Giant() = default;
 };
 
 
@@ -108,6 +107,7 @@ public:
     Dragon();
     Dragon(const Dragon& dragon) = default;
     Dragon& operator=(const Dragon& dragon) = default;
+    ~Dragon() = default;
 };
 
 
@@ -115,8 +115,11 @@ class Gang : public Encounter {
     std::vector<std::unique_ptr<Encounter>> gangMonsters;
     
 public:
-    Gang();
-    void addMonster(const std::string& monster);
+    Gang(std::vector<std::unique_ptr<Encounter>> monsters);
+    ~Gang() = default;
+
+    /* TODO: OPERATOR= AND COPY CONSTRUCTOR !!!  */ 
+
     std::string getDescription() const override;
 };
 

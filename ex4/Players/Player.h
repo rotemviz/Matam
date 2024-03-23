@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "HealthPoints.h"
@@ -7,7 +6,6 @@
 #include <string>
 
 using std::string;
-
 
 class Player {
     std::string m_name;
@@ -75,6 +73,13 @@ public:
      * @return - coins of the player
     */
     int getCoins() const;
+
+    /**
+     * Gets the job of the player
+     * 
+     * @return - job of the player
+    */
+    virtual Job getJob() const = 0;
 
     /*
      * Raises the player's level by one, unless his level is the max level:
@@ -186,7 +191,6 @@ public:
 
     std::string getDescription() const override;
     int getCombatPower() const override;
-    const std::string& getJob() const override;
 };
 
 
@@ -202,5 +206,4 @@ public:
 
     virtual int solarEclipseEffect() override;
     std::string getDescription() const override;
-    const std::string& getJob() const override;
 };

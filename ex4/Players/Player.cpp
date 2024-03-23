@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Cards/SolarEclipse.h"
 
 Behavior* createPlayerBehavior(const std::string& behavior) {
     if(behavior == "Responsible") {
@@ -99,6 +100,14 @@ int Player::getMaxHP() const {
 
 int Player::getCombatPower() const {
     return (this->getForce() + this->getLevel());
+}
+
+void applySolarEclipse(Player& player) {
+    if (player.getJob() == Job::Sorcerer) {
+        player.forceUp(); // Sorcerers gain 1 Force point
+    } else if (player.getJob() == Job::Warrior) {
+        player.forceDown(); // Non-Sorcerers lose 1 Force point
+    }
 }
 
 int Player::solarEclipseEffect() {

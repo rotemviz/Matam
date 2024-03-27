@@ -8,15 +8,22 @@
 
 #include "Players/Player.h"
 #include "Cards/Card.h"
+#include "Cards/Encounter.h"
+#include "Cards/Event.h"
 
 using std::string;
 using std::shared_ptr;
 using std::vector;
-using std::queue;
+using std::deque;
 
 class Mtmchkin{
 private:
+    int m_numberOfPlayers;
+    vector<shared_ptr<Player>> m_players;
+    vector<shared_ptr<Player>> m_leaderBoard;
+    deque<std::unique_ptr<Card>> m_cards;
     int m_turnIndex;
+    
 
     /**
      * Playes a single turn for a player
@@ -40,6 +47,8 @@ private:
      * @return - true if the game is over, false otherwise
     */
     bool isGameOver() const;
+
+    Gang* createGang(int& index, vector<string>& givenWords, vector<std::unique_ptr<Encounter>>& monstersInGang, int numberOfWords);
 
 public:
     /**

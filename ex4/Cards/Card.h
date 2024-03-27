@@ -1,9 +1,6 @@
-#ifndef Card_H
-#define Card_H
-
 #pragma once
+
 #include "../Players/Player.h"
-#include "../utilities.h"
 #include <string>
 
 class Card {
@@ -47,5 +44,4 @@ public:
 
     virtual void applyCard(Player& player) = 0;
 
-}; 
-#endif // Card_H
+};

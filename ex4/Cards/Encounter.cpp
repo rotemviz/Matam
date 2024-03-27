@@ -1,4 +1,6 @@
 #include "Encounter.h"
+#include "../utilities.h"
+#include <iostream>
 
 
 Encounter::Encounter(const std::string& monster, int power, int loot, int damage) :
@@ -47,18 +49,19 @@ Dragon::Dragon() :
     Encounter("Dragon", POWER, LOOT, DAMAGE)
 {}
 
-Gang::Gang(std::vector<std::unique_ptr<Encounter>> monsters) : 
+Gang::Gang(std::vector<std::unique_ptr<Encounter>>& monsters) : 
     Encounter("Gang", 0, 0, 0), gangMonsters()
 {
-    for(int i=0; i<monsters.size(); ++i) {
-        gangMonsters[i] = std::move(monsters[i]);
-        m_damage+=monsters[i]->getDamage();
-        m_loot+=monsters[i]->getLoot();
-        m_power+=monsters[i]->getPower();
+    for(auto iterator = monsters.begin(); iterator != monsters.end(); ++iterator) {
+        
+        gangMonsters.push_back(std::move(*iterator));
+        m_damage+=gangMonsters.back()->getDamage();
+        m_loot+=gangMonsters.back()->getLoot();
+        m_power+=gangMonsters.back()->getPower();
     }
 }
 
 std::string Gang::getDescription() const {
-    return "Gang of " + std::to_string(gangMonsters.size()) + "members (power " + std::to_string(m_power) + ", loot " 
-    + std::to_string(m_loot) + ", damage " + std::to_string(m_damage);
+    return "Gang of " + std::to_string(gangMonsters.size()) + " members (power " + std::to_string(m_power) + ", loot " 
+    + std::to_string(m_loot) + ", damage " + std::to_string(m_damage) + ")";
 }

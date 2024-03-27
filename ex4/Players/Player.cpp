@@ -41,7 +41,7 @@ void Player::levelUp() {
     }
 }
 
-bool Player::isTopLevel() const {
+bool Player::isMaxLevel() const {
     return m_level == GAME_MAX_LEVEL;
 }
 
@@ -102,6 +102,9 @@ int Player::getCombatPower() const {
 }
 
 int Player::solarEclipseEffect() {
+    if(m_force == 0) {
+        return 0;
+    }
     forceDown();
     return -1;
 }

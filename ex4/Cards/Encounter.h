@@ -115,7 +115,7 @@ class Gang : public Encounter {
     std::vector<std::unique_ptr<Encounter>> gangMonsters;
     
 public:
-    Gang(std::vector<std::unique_ptr<Encounter>> monsters);
+    Gang(std::vector<std::unique_ptr<Encounter>>& monsters);
     ~Gang() = default;
 
     /* TODO: OPERATOR= AND COPY CONSTRUCTOR !!!  */ 

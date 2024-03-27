@@ -91,7 +91,7 @@ public:
      *      True if the player's level is the max level in the game, which is ten
      *      False otherwise
     */
-    bool isTopLevel() const;
+    bool isMaxLevel() const;
 
     /*
      * Increases the player's coins by a given amount of coins:

@@ -1,7 +1,8 @@
 #ifndef EVENT
 #define EVENT
 
-#include "Card.h";
+#include "Card.h"
+#include "../utilities.h"
 
 class SolarEclipse : public Card {
 

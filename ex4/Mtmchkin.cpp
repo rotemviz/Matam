@@ -10,18 +10,25 @@
 
 
 bool rankComparator(std::shared_ptr<Player> playerOne, std::shared_ptr<Player> playerTwo);
+bool isAlphaString(const string& string);
 
 Gang* Mtmchkin::createGang(int& index, vector<string>& givenWords, vector<std::unique_ptr<Encounter>>& monstersInGang, int numberOfWords) {
     int sizeOfGang = std::stoi(givenWords[index]);
-    int givenIndex = index;
-    if(sizeOfGang > numberOfWords - (givenIndex+1)) {
+    // std::cout << "size Of Gang: " << sizeOfGang << std::endl; //TO DELETE !!! 
+    int countEncounters = 1;
+    // std::cout << "Given Index: " << givenIndex << std::endl; //TO DELETE !!!
+    // std::cout << "size of gang - if: " << (numberOfWords - (givenIndex+1)) << std::endl; //TO DELETE !!!
+    if(sizeOfGang < 2 || sizeOfGang > numberOfWords - (index+1)) {
         throw std::runtime_error("Invalid Cards File");
     }
     ++index;
-    for(; index!=(givenIndex + sizeOfGang + 1); ++index) {
+    while(countEncounters <= sizeOfGang) {
+        if(index >= numberOfWords) {
+            throw std::runtime_error("Invalid Cards File");
+        }
         if(givenWords[index] == "Goblin") {
             monstersInGang.push_back(std::unique_ptr<Encounter>(new Goblin()));
-        } 
+        }
         else if(givenWords[index] == "Giant") {
             monstersInGang.push_back(std::unique_ptr<Encounter>(new Giant()));
         }
@@ -29,14 +36,19 @@ Gang* Mtmchkin::createGang(int& index, vector<string>& givenWords, vector<std::u
             monstersInGang.push_back(std::unique_ptr<Encounter>(new Dragon()));
         }
         else if(givenWords[index] == "Gang") {
+            ++index;
             vector<std::unique_ptr<Encounter>> monstersInOtherGang;
-            monstersInGang.push_back(std::unique_ptr<Encounter>(createGang(++index, givenWords, monstersInOtherGang, numberOfWords)));
-            givenIndex = index;
+            monstersInGang.push_back(std::unique_ptr<Encounter>(createGang(index, givenWords, monstersInOtherGang, numberOfWords)));
         }
         else {
+            // std::cout << "NOT A VALID CARD !!" << std::endl; //TO DELETE !!!
+            // std::cout << givenWords[index] << std::endl; //TO DELETE !!!
             throw std::runtime_error("Invalid Cards File");
         }
+        ++countEncounters;
+        ++index;
     }
+    --index;
     return new Gang(monstersInGang);
 }
 
@@ -47,6 +59,7 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) : m_number
 
     /*===== TODO: Open and read cards file =====*/
 
+    int countEncounters = 0;
     std::ifstream deckFile(deckPath);
     if(!deckFile.is_open()) {
         throw std::runtime_error("Invalid Cards File");
@@ -59,17 +72,20 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) : m_number
     for(int i=0; i<countWords; i++) {
         if(wordsInDeckFile[i] == "Goblin") {
             m_cards.push_back(std::unique_ptr<Card>(new Goblin()));
+            countEncounters++;
         } 
         else if(wordsInDeckFile[i] == "Giant") {
             m_cards.push_back(std::unique_ptr<Card>(new Giant()));
+            countEncounters++;
         }
         else if(wordsInDeckFile[i] == "Dragon") {
             m_cards.push_back(std::unique_ptr<Card>(new Dragon()));
+            countEncounters++;
         }
         else if(wordsInDeckFile[i] == "Gang") {
             vector<std::unique_ptr<Encounter>> monstersInGang;
             m_cards.push_back(std::unique_ptr<Card>(createGang(++i, wordsInDeckFile, monstersInGang, countWords)));
-            --i;
+            countEncounters++;
         }
         else if(wordsInDeckFile[i] == "SolarEclipse") {
             m_cards.push_back(std::unique_ptr<Card>(new SolarEclipse(wordsInDeckFile[i])));
@@ -81,8 +97,8 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) : m_number
             throw std::runtime_error("Invalid Cards File");
         }
     }
-    if(m_cards.size() < 2) {
-        throw std::runtime_error("Invalid Cards File"); 
+    if(m_cards.size() < 2 || countEncounters == 0) {
+        throw std::runtime_error("Invalid Cards File");
     }
 
     /*==========================================*/
@@ -101,7 +117,7 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) : m_number
         while(stringStream >> word) {
             wordsInLine.push_back(word);
         }
-        if(wordsInLine.size() != 3 || wordsInLine[0].length() < 3 || wordsInLine[0].length() > 15) {
+        if(wordsInLine.size() != 3 || !isAlphaString(wordsInLine[0]) || wordsInLine[0].length() < 3 || wordsInLine[0].length() > 15) {
             throw std::runtime_error("Invalid Players File");
         }
         if(wordsInLine[1] == "Warrior") {
@@ -244,8 +260,16 @@ bool rankComparator(std::shared_ptr<Player> playerOne, std::shared_ptr<Player> p
             return false;
         }
         else {
-            return playerOne->getName() < playerTwo->getName();
+            return playerOne->getName() <= playerTwo->getName();
         }
     }   
 }
 
+bool isAlphaString(const string& string) {
+    for(char c : string) {
+        if(!std::isalpha(c)) {
+            return false;
+        }
+    }
+    return true;
+}

@@ -16,12 +16,12 @@ Responsible::Responsible(const std::string& behavior) :
 
 int Responsible::makePotionsMerchantMove(Player& player, int cost, int givenHP) {
     int playerMaxHP = player.getMaxHP();
-    int hpSum = 0;
-    while(player.pay(cost) && player.getHealthPoints() < playerMaxHP) {
+    int potionsAmount = 0;
+    while(player.getHealthPoints() < playerMaxHP && player.pay(cost)) {
         player.heal(givenHP);
-        hpSum+=givenHP;
+        potionsAmount++;
     }
-    return hpSum;
+    return potionsAmount;
 }
 
 RiskTaking::RiskTaking(const std::string& behavior) : 
@@ -33,7 +33,7 @@ int RiskTaking::makePotionsMerchantMove(Player& player, int cost, int givenHP) {
     int playerMaxHP = player.getMaxHP();
     if(currentHP < (playerMaxHP/2) && player.pay(cost)) {
         player.heal(givenHP);
-        return givenHP;
+        return 1;
     }
     return 0;
 }

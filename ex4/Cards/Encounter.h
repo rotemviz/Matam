@@ -40,7 +40,7 @@ public:
      * @param other - the Monster given to assign.
      * @return - the Monster post assignment.
      */
-    Encounter& operator=(const Encounter& encounter);
+    Encounter& operator=(const Encounter& encounter) = default;
 
     /**
      * Gets the of power the encountered monster
@@ -62,6 +62,8 @@ public:
      * @return - the damage to be taken upon losing against the encountered monster
     */
     virtual int getDamage() const;
+
+    virtual string getCardName() const;
 
     virtual std::string getDescription() const override;
 
@@ -117,8 +119,9 @@ class Gang : public Encounter {
 public:
     Gang(std::vector<std::unique_ptr<Encounter>>& monsters);
     ~Gang() = default;
-
-    /* TODO: OPERATOR= AND COPY CONSTRUCTOR !!!  */ 
+    Gang(const Gang& other);
+    Gang& operator=(const Gang& other);
+    /* TODO: OPERATOR= AND COPY CONSTRUCTOR !!!  */
 
     std::string getDescription() const override;
 };

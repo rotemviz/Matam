@@ -19,6 +19,10 @@ int Encounter::getDamage() const {
     return m_damage;
 }
 
+string Encounter::getCardName() const {
+    return m_cardName;
+}
+
 std::string Encounter::getDescription() const {
     return m_cardName + " (power " + std::to_string(m_power) + ", loot " + std::to_string(m_loot) + ", damage " 
     + std::to_string(m_damage) + ")";
@@ -58,6 +62,16 @@ Gang::Gang(std::vector<std::unique_ptr<Encounter>>& monsters) :
         m_damage+=gangMonsters.back()->getDamage();
         m_loot+=gangMonsters.back()->getLoot();
         m_power+=gangMonsters.back()->getPower();
+    }
+}
+
+Gang::Gang(const Gang& other) : // NEEDS TO BE CHECKED !!
+    Encounter(other.m_cardName, other.m_power, other.m_loot, other.m_damage), gangMonsters()
+{
+    for(auto iterator = other.gangMonsters.begin(); iterator != other.gangMonsters.end(); ++iterator) {
+        if(Encounter* encounterPointer = dynamic_cast<Encounter*>(iterator->get())) {
+            gangMonsters.push_back(std::unique_ptr<Encounter>(new Encounter(*encounterPointer)));
+        }
     }
 }
 

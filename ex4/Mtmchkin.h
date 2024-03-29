@@ -47,8 +47,7 @@ private:
      * @return - true if the game is over, false otherwise
     */
     bool isGameOver() const;
-
-    Gang* createGang(int& index, vector<string>& givenWords, vector<std::unique_ptr<Encounter>>& monstersInGang, int numberOfWords);
+    
 
 public:
     /**

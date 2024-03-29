@@ -31,16 +31,16 @@ public:
     Encounter(const Encounter& encounter) = default;
 
     /**
-     * Default Destructor.
-     */
-    virtual ~Encounter() = default;
-
-    /**
      * Assignment operator override.
      * @param other - the Monster given to assign.
      * @return - the Monster post assignment.
      */
     Encounter& operator=(const Encounter& encounter) = default;
+
+    /**
+     * Default Destructor.
+     */
+    virtual ~Encounter() = default;
 
     /**
      * Gets the of power the encountered monster
@@ -118,10 +118,9 @@ class Gang : public Encounter {
     
 public:
     Gang(std::vector<std::unique_ptr<Encounter>>& monsters);
-    ~Gang() = default;
     Gang(const Gang& other);
     Gang& operator=(const Gang& other);
-    /* TODO: OPERATOR= AND COPY CONSTRUCTOR !!!  */
+    ~Gang() = default;
 
     std::string getDescription() const override;
 };

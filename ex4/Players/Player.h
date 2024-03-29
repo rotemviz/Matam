@@ -36,8 +36,8 @@ public:
     /*
      * Explicitly telling the compiler to use the default methods of copy constructor, destructor, and operator=
     */
-    Player(const Player& player) = default;
-    Player& operator=(const Player& player) = default;
+    Player(const Player& player) = delete;
+    Player& operator=(const Player& player) = delete;
 
     virtual ~Player() = default;
 
@@ -180,8 +180,8 @@ class Warrior : public Player {
 
 public:
     Warrior(const std::string& name, const std::string& behavior);
-    Warrior(const Warrior& other) = default;
-    Warrior& operator=(const Warrior& other) = default;
+    Warrior(const Warrior& other) = delete;
+    Warrior& operator=(const Warrior& other) = delete;
     ~Warrior() = default;
 
     std::string getDescription() const override;
@@ -196,8 +196,8 @@ class Sorcerer : public Player {
 public:
 
     Sorcerer(const std::string& name, const std::string& behavior);
-    Sorcerer(const Sorcerer& other) = default;
-    Sorcerer& operator=(const Sorcerer& other) = default;
+    Sorcerer(const Sorcerer& other) = delete;
+    Sorcerer& operator=(const Sorcerer& other) = delete;
     ~Sorcerer() = default;
 
     virtual int solarEclipseEffect() override;

@@ -2,6 +2,7 @@
 #include "../utilities.h"
 #include <iostream>
 
+std::vector<std::unique_ptr<Encounter>> copyGangMonsters(const std::vector<std::unique_ptr<Encounter>>& gangMonsters);
 
 Encounter::Encounter(const std::string& monster, int power, int loot, int damage) :
     Card(monster), m_power(power), m_loot(loot), m_damage(damage)
@@ -65,17 +66,38 @@ Gang::Gang(std::vector<std::unique_ptr<Encounter>>& monsters) :
     }
 }
 
-Gang::Gang(const Gang& other) : // NEEDS TO BE CHECKED !!
-    Encounter(other.m_cardName, other.m_power, other.m_loot, other.m_damage), gangMonsters()
-{
-    for(auto iterator = other.gangMonsters.begin(); iterator != other.gangMonsters.end(); ++iterator) {
-        if(Encounter* encounterPointer = dynamic_cast<Encounter*>(iterator->get())) {
-            gangMonsters.push_back(std::unique_ptr<Encounter>(new Encounter(*encounterPointer)));
-        }
+Gang::Gang(const Gang& other) : 
+    Encounter(other.m_cardName, other.m_power, other.m_loot, other.m_damage), gangMonsters(copyGangMonsters(other.gangMonsters))
+{}
+
+Gang& Gang::operator=(const Gang& other) {
+    if(this == &other) {
+        return *this;
     }
+    std::vector<std::unique_ptr<Encounter>> copiedOtherGangMonsters(copyGangMonsters(other.gangMonsters));
+    while(!gangMonsters.empty()) {
+        gangMonsters.pop_back();
+    }
+    for(auto iterator = copiedOtherGangMonsters.begin(); iterator != copiedOtherGangMonsters.end(); ++iterator) {
+        gangMonsters.push_back(std::unique_ptr<Encounter>(std::move(*iterator)));
+    }
+    m_power = other.m_power;
+    m_loot = other.m_loot;
+    m_damage = other.m_damage;
+    return *this;
 }
 
 std::string Gang::getDescription() const {
     return "Gang of " + std::to_string(gangMonsters.size()) + " members (power " + std::to_string(m_power) + ", loot " 
     + std::to_string(m_loot) + ", damage " + std::to_string(m_damage) + ")";
+}
+
+std::vector<std::unique_ptr<Encounter>> copyGangMonsters(const std::vector<std::unique_ptr<Encounter>>& gangMonsters) {
+    std::vector<std::unique_ptr<Encounter>> copiedGangMonsters;
+    for(auto iterator = gangMonsters.begin(); iterator != gangMonsters.end(); ++iterator) {
+        if(Encounter* encounterPointer = dynamic_cast<Encounter*>(iterator->get())) {
+            copiedGangMonsters.push_back(std::unique_ptr<Encounter>(new Encounter(*encounterPointer)));
+        }
+    }
+    return copiedGangMonsters;
 }

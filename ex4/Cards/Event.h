@@ -2,7 +2,7 @@
 #define EVENT
 
 #include "Card.h"
-#include "../utilities.h"
+#include "./utilities.h"
 
 class SolarEclipse : public Card {
 

@@ -1,5 +1,5 @@
 #include "Encounter.h"
-#include "../utilities.h"
+#include "./utilities.h"
 #include <iostream>
 
 std::vector<std::unique_ptr<Encounter>> copyGangMonsters(const std::vector<std::unique_ptr<Encounter>>& gangMonsters);

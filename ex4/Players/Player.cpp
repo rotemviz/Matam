@@ -1,14 +1,7 @@
 #include "Player.h"
 
-Behavior* createPlayerBehavior(const std::string& behavior) {
-    if(behavior == "Responsible") {
-        return new Responsible(behavior);
-    }
-    else if(behavior == "RiskTaking") {
-        return new RiskTaking(behavior);
-    }
-    throw std::runtime_error("Invalid Player File");
-}
+
+Behavior* createPlayerBehavior(const std::string& behavior);
 
 Player::Player(const std::string& name, const std::string& behavior) : 
     m_name(name), m_level(START_LEVEL), m_force(START_FORCE), m_hp(), 
@@ -146,4 +139,14 @@ std::string Sorcerer::getDescription() const {
 
 const std::string& Sorcerer::getJob() const {
     return m_job;
+}
+
+Behavior* createPlayerBehavior(const std::string& behavior) {
+    if(behavior == "Responsible") {
+        return new Responsible(behavior);
+    }
+    else if(behavior == "RiskTaking") {
+        return new RiskTaking(behavior);
+    }
+    throw std::runtime_error("Invalid Player File");
 }

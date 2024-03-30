@@ -76,7 +76,7 @@ public:
     */
     int getCoins() const;
 
-    /*
+    /**
      * Raises the player's level by one, unless his level is the max level:
      *
      * @return
@@ -84,7 +84,7 @@ public:
     */
     void levelUp();
 
-    /*
+    /**
      * Checks if the player got to the max level:
      *
      * @return
@@ -93,7 +93,7 @@ public:
     */
     bool isMaxLevel() const;
 
-    /*
+    /**
      * Increases the player's coins by a given amount of coins:
      *
      * @param givenCoins - The amount of coins which the player's coins increases by.
@@ -102,7 +102,7 @@ public:
     */
     void addCoins(int givenCoins);
 
-    /*
+    /**
      * Decreases the player's amount of coins by a given amount of coins, unless the given amount is bigger than the player's amount of coins:
      *
      * @param amount - The amount of coins which the player's coins decreases by.
@@ -112,7 +112,7 @@ public:
     */
     bool pay(int amount);
 
-    /*
+    /**
      * Decreases the player's health points by a given health points, at most to zero:
      *
      * @param hpDamage - The amount of health points which the player's health points dencreases by.
@@ -121,7 +121,7 @@ public:
     */
     void damage(int hpDamage);
 
-    /*
+    /**
      * Checks if the player is knocked out
      *
      * @return
@@ -130,7 +130,7 @@ public:
     */
     bool isKnockedOut() const;
 
-    /*
+    /**
      * Increases the player's health points by a given amount of health points, at most to the player's maximum health points:
      *
      * 
@@ -140,7 +140,7 @@ public:
     */
     void heal(int hp);
 
-    /*
+    /**
      * Raises the player's force by one:
      *
      * @return
@@ -148,7 +148,7 @@ public:
     */
     void forceUp();
 
-    /*
+    /**
      * Lowers the player's force by one:
      *
      * @return

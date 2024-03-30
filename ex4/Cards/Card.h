@@ -5,7 +5,6 @@
 
 class Card {
 
-protected:
     std::string m_cardName;
 
 public:
@@ -34,6 +33,13 @@ public:
      * @return - the card post assignment.
      */
     Card& operator=(const Card& other) = default;
+    
+    /**
+     * Gets the name of the card
+     * 
+     * @return - the name of the card
+    */
+    string getCardName() const;
 
     /**
      * Gets the description of the card
@@ -42,6 +48,12 @@ public:
     */
     virtual std::string getDescription() const;
 
+    /**
+     * applies the card on the player
+     * 
+     * @param player - the player to play the card
+     * @return - void
+    */
     virtual void applyCard(Player& player) = 0;
 
 };

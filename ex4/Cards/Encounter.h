@@ -22,24 +22,15 @@ public:
      * @param power - power points of the monster.
      * @param loot - loot given by the monster if encounter is won.
      * @param damage - damage points of the monster.
+     * @return - A new instance of Encounter
      */
     Encounter(const std::string& monster, int power, int loot, int damage);
 
     /**
-     * Copy constructor of Monster.
-     */
+     * Explicitly telling the compiler to use the defualt methods of copy constuctor, destructor, and operator=
+    */
     Encounter(const Encounter& encounter) = default;
-
-    /**
-     * Assignment operator override.
-     * @param other - the Monster given to assign.
-     * @return - the Monster post assignment.
-     */
     Encounter& operator=(const Encounter& encounter) = default;
-
-    /**
-     * Default Destructor.
-     */
     virtual ~Encounter() = default;
 
     /**
@@ -47,27 +38,36 @@ public:
      * 
      * @return - power points of monster
     */
-    virtual int getPower() const;
+    int getPower() const;
 
     /**
-     * Gets the amount of gold the player gets if monster encountered is defeated
+     * Gets the amount of coins the encountered monster has
      * 
-     * @return - the amount of gold the player gets for winning in the current encounter
+     * @return - The amount of coins the encountered monster has
     */
-    virtual int getLoot() const;
+    int getLoot() const;
 
     /**
-     * Gets the amount (in health points) of damage you recieve if losing in the encounter
+     * Gets the damage of the monster, in health points
      * 
      * @return - the damage to be taken upon losing against the encountered monster
     */
-    virtual int getDamage() const;
+    int getDamage() const;
 
-    virtual string getCardName() const;
-
+    /**
+     * Gets the description of the encounter
+     * 
+     * @return - The player on whom the encounter will be applied on
+    */
     virtual std::string getDescription() const override;
 
-    virtual void applyCard(Player& player) override;
+    /**
+     * applies the encounter on the player
+     * 
+     * @param player - the player to be applied on
+     * @return - void
+    */
+    void applyCard(Player& player) override;
 };
 
 
@@ -78,7 +78,15 @@ class Goblin : public Encounter {
 
 public:
 
+    /**
+     * C'tor of Card class.
+     * @return - A new instance of Goblin
+     */
     Goblin();
+
+    /**
+     * Explicitly telling the compiler to use the defualt methods of copy constuctor, destructor, and operator=
+    */
     Goblin(const Goblin& goblin) = default;
     Goblin& operator=(const Goblin& goblin) = default;
     ~Goblin() = default;
@@ -92,7 +100,15 @@ class Giant : public Encounter {
 
 public:
 
+    /**
+     * C'tor of Card class.
+     * @return - A new instance of Giant
+     */
     Giant();
+
+    /**
+     * Explicitly telling the compiler to use the defualt methods of copy constuctor, destructor, and operator=
+    */
     Giant(const Giant& giant) = default;
     Giant& operator=(const Giant& giant) = default;
     ~Giant() = default;
@@ -106,7 +122,15 @@ class Dragon : public Encounter {
 
 public:
 
+    /**
+     * C'tor of Card class.
+     * @return - A new instance of Dragon
+     */
     Dragon();
+
+    /**
+     * Explicitly telling the compiler to use the defualt methods of copy constuctor, destructor, and operator=
+    */
     Dragon(const Dragon& dragon) = default;
     Dragon& operator=(const Dragon& dragon) = default;
     ~Dragon() = default;
@@ -117,11 +141,41 @@ class Gang : public Encounter {
     std::vector<std::unique_ptr<Encounter>> gangMonsters;
     
 public:
+
+    /**
+     * C'tor of Gang class
+     * 
+     * @param monsters - The monsters in the Gang
+     * @return - A new instance of Gang
+    */
     Gang(std::vector<std::unique_ptr<Encounter>>& monsters);
+
+    /**
+     * Copy Constructor of Gang class
+     * 
+     * @param other - the gang to be copied
+     * @return - A new instance of Gang
+    */
     Gang(const Gang& other);
+
+    /**
+     * Assignment operator of Gang class
+     * 
+     * @param other - the gang to be assigned
+     * @return - the gang post the assignment
+    */
     Gang& operator=(const Gang& other);
+
+    /**
+     * Explicitly telling the compiler to use the defualt method of destructor
+    */
     ~Gang() = default;
 
+     /**
+     * Gets the description of the gang
+     * 
+     * @return - the description of the gang
+    */
     std::string getDescription() const override;
 };
 

@@ -9,6 +9,7 @@ class Behavior
 {
 protected:
     std::string m_behavior;
+    
 public:
     Behavior(const std::string& behavior);
     Behavior(const Behavior& behavior) = default;

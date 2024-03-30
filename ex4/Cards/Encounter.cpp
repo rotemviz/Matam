@@ -1,5 +1,5 @@
 #include "Encounter.h"
-#include "./utilities.h"
+#include "utilities.h"
 #include <iostream>
 
 std::vector<std::unique_ptr<Encounter>> copyGangMonsters(const std::vector<std::unique_ptr<Encounter>>& gangMonsters);
@@ -20,12 +20,8 @@ int Encounter::getDamage() const {
     return m_damage;
 }
 
-string Encounter::getCardName() const {
-    return m_cardName;
-}
-
 std::string Encounter::getDescription() const {
-    return m_cardName + " (power " + std::to_string(m_power) + ", loot " + std::to_string(m_loot) + ", damage " 
+    return getCardName() + " (power " + std::to_string(m_power) + ", loot " + std::to_string(m_loot) + ", damage " 
     + std::to_string(m_damage) + ")";
 }
 
@@ -67,7 +63,7 @@ Gang::Gang(std::vector<std::unique_ptr<Encounter>>& monsters) :
 }
 
 Gang::Gang(const Gang& other) : 
-    Encounter(other.m_cardName, other.m_power, other.m_loot, other.m_damage), gangMonsters(copyGangMonsters(other.gangMonsters))
+    Encounter(other.getCardName(), other.m_power, other.m_loot, other.m_damage), gangMonsters(copyGangMonsters(other.gangMonsters))
 {}
 
 Gang& Gang::operator=(const Gang& other) {

@@ -11,7 +11,7 @@ class HealthPoints {
     static const int DEFAULT_MAX_HP = 100;
 
 public:
-    /*
+    /**
      * C'tor of HealthPoints class
      *
      * @param name - The max number of health points.
@@ -27,7 +27,7 @@ public:
     HealthPoints(const HealthPoints& healthPoints) = default;
     HealthPoints& operator=(const HealthPoints& hp) = default;
 
-    /*
+    /**
      * Gets the current health points of HealthPoints:
      * 
      * @return
@@ -35,7 +35,7 @@ public:
     */
     int getHP() const;
 
-    /*
+    /**
      * Get the max health points of HealthPoints:
      * 
      * @return
@@ -43,7 +43,7 @@ public:
     */
     int getMaxHP() const;
 
-    /*
+    /**
      * Adds health points to the current HealthPoints, at most to the maximum health points:
      * 
      * @param hp - The health points to be added.
@@ -52,7 +52,7 @@ public:
     */
     HealthPoints& operator+=(const int hp);
 
-    /*
+    /**
      * reduces health points from the current HealthPoints, at most to zero:
      * 
      * @param hp - The health points to be reduced.
@@ -61,7 +61,7 @@ public:
     */
     HealthPoints& operator-=(const int hp);
 
-    /*
+    /**
      * reduces health points from a copy of the current HealthPoints, at most to zero:
      * 
      * @param hp - The health points to be reduced.
@@ -74,7 +74,7 @@ public:
     class InvalidArgument{};
 };
 
-/*
+/**
  * Adds health points to a copy of the given HealthPoints , at most to the maximum health points of the given HealthPoints:
  * 
  * @param healthPoints - The given HealthPoints.
@@ -84,7 +84,7 @@ public:
 */
 HealthPoints operator+(const HealthPoints& healthPoints, const int hp);
 
-/*
+/**
  * Adds health points to a copy of the given HealthPoints , at most to the maximum health points of the given HealthPoints:
  * 
  * @param hp - The health points to be reduced.
@@ -94,7 +94,7 @@ HealthPoints operator+(const HealthPoints& healthPoints, const int hp);
 */
 HealthPoints operator+(const int hp, const HealthPoints& healthPoints);
 
-/*
+/**
  * Checks if two given HealthPoints are equal:
  * 
  * @param healthPointsOne - The first HealthsPoint.
@@ -105,7 +105,7 @@ HealthPoints operator+(const int hp, const HealthPoints& healthPoints);
 */
 bool operator==(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-/*
+/**
  * Checks if two given HealthPoints are not equal:
  * 
  * @param healthPointsOne - The first HealthsPoint.
@@ -116,7 +116,7 @@ bool operator==(const HealthPoints& healthPointsOne, const HealthPoints& healthP
 */
 bool operator!=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-/*
+/**
  * Checks if one given HealthPoints is bigger than another given HealthPoints:
  * 
  * @param healthPointsOne - The first HealthsPoint.
@@ -127,7 +127,7 @@ bool operator!=(const HealthPoints& healthPointsOne, const HealthPoints& healthP
 */
 bool operator>(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-/*
+/**
  * Checks if one given HealthPoints is smaller than another given HealthPoints:
  * 
  * @param healthPointsOne - The first HealthsPoint.
@@ -138,7 +138,7 @@ bool operator>(const HealthPoints& healthPointsOne, const HealthPoints& healthPo
 */
 bool operator<(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-/*
+/**
  * Checks if one given HealthPoints is smaller or equal to another given HealthPoints:
  * 
  * @param healthPointsOne - The first HealthsPoint.
@@ -149,7 +149,7 @@ bool operator<(const HealthPoints& healthPointsOne, const HealthPoints& healthPo
 */
 bool operator<=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-/*
+/**
  * Checks if one given HealthPoints is bigger or equal to another given HealthPoints:
  * 
  * @param healthPointsOne - The first HealthsPoint.
@@ -160,7 +160,7 @@ bool operator<=(const HealthPoints& healthPointsOne, const HealthPoints& healthP
 */
 bool operator>=(const HealthPoints& healthPointsOne, const HealthPoints& healthPointsTwo);
 
-/*
+/**
  * Print operator:
  * 
  * @param os - An ostream object.

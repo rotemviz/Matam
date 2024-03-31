@@ -17,21 +17,10 @@ public:
 
 
     /**
-     * Ordering the compiler to use default methods.
+     * Explicitly telling the compiler to use the defualt methods of copy constuctor, destructor, and operator=
      */
     Card(const Card& card) = default;
-
-
-    /**
-     * Default Destructor.
-     */
     virtual ~Card() = default;
-
-    /**
-     * Assignment operator override.
-     * @param other - the Card given to assign.
-     * @return - the card post assignment.
-     */
     Card& operator=(const Card& other) = default;
     
     /**
@@ -48,12 +37,6 @@ public:
     */
     virtual std::string getDescription() const;
 
-    /**
-     * applies the card on the player
-     * 
-     * @param player - the player to play the card
-     * @return - void
-    */
     virtual void applyCard(Player& player) = 0;
 
 };

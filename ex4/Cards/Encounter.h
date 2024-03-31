@@ -167,7 +167,7 @@ public:
     Gang& operator=(const Gang& other);
 
     /**
-     * Explicitly telling the compiler to use the defualt method of destructor
+     * Explicitly telling the compiler to use the default method of destructor
     */
     ~Gang() = default;
 

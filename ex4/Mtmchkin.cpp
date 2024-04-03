@@ -81,12 +81,8 @@ Mtmchkin::Mtmchkin(const string& deckPath, const string& playersPath) : m_number
         if(wordsInLine.size() != 3 || !isAlphaString(wordsInLine[0]) || wordsInLine[0].length() < 3 || wordsInLine[0].length() > 15) {
             throw std::runtime_error("Invalid Players File");
         }
-        if(wordsInLine[1] == "Warrior") {
-            m_players.push_back(shared_ptr<Player>(new Warrior(wordsInLine[0], wordsInLine[2])));
-            m_leaderBoard.push_back(shared_ptr<Player>(m_players.back()));
-        }
-        else if(wordsInLine[1] == "Sorcerer") {
-            m_players.push_back(shared_ptr<Player>(new Sorcerer(wordsInLine[0], wordsInLine[2])));
+        if(wordsInLine[1] == "Warrior" || wordsInLine[1] == "Sorcerer") {
+            m_players.push_back(shared_ptr<Player>(new Player(wordsInLine[0], wordsInLine[2], wordsInLine[1])));
             m_leaderBoard.push_back(shared_ptr<Player>(m_players.back()));
         }
         else {

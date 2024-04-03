@@ -1,11 +1,12 @@
 #include "Player.h"
 
 
-Behavior* createPlayerBehavior(const std::string& behavior);
+Behavior* createPlayerBehavior(const string& behavior);
+Job* createPlayerJob(const string& job);
 
-Player::Player(const std::string& name, const std::string& behavior) : 
+Player::Player(const string& name, const string& behavior, const string& job) : 
     m_name(name), m_level(START_LEVEL), m_force(START_FORCE), m_hp(), 
-    m_coins(START_COINS), m_behavior(createPlayerBehavior(behavior))
+    m_coins(START_COINS), m_behavior(createPlayerBehavior(behavior)), m_job(createPlayerJob(job))
 {}
 
 int Player::getLevel() const {
@@ -91,54 +92,24 @@ int Player::getMaxHP() const {
 }
 
 int Player::getCombatPower() const {
-    return (this->getForce() + this->getLevel());
+    return m_job->getCombatPower(*this);
+}
+
+string Player::getDescription() const {
+    return (this->getName() + ", " + m_job->getJob() + " with " + m_behavior->getBehavior() + " behavior (level " 
+    + std::to_string(this->getLevel()) + ", force " + std::to_string(this->getForce()) + ")");
+}
+
+string Player::getJob() const {
+    return m_job->getJob();
 }
 
 int Player::solarEclipseEffect() {
-    if(m_force == 0) {
-        return 0;
-    }
-    forceDown();
-    return -1;
+    return m_job->solarEclipse(*this);
 }
 
 int Player::usePotionsMerchantMove(int cost, int givenHP) {
     return m_behavior->makePotionsMerchantMove(*this, cost, givenHP);
-}
-
-Warrior::Warrior(const std::string& name, const std::string& behavior) : 
-    Player(name, behavior), m_job("Warrior")
-{}
-
-int Warrior::getCombatPower() const {
-    return (this->getForce()*2 + this->getLevel());
-}
-
-std::string Warrior::getDescription() const {
-    return (this->getName() + ", " + m_job + " with " + m_behavior->getBehavior() + " behavior (level " 
-    + std::to_string(this->getLevel()) + ", force " + std::to_string(this->getForce()) + ")");
-}
-
-const std::string& Warrior::getJob() const {
-    return m_job;
-}
-
-Sorcerer::Sorcerer(const std::string& name, const std::string& behavior) :
-    Player(name, behavior), m_job("Sorcerer")
-{}
-
-int Sorcerer::solarEclipseEffect() {
-    forceUp();
-    return 1;
-}
-
-std::string Sorcerer::getDescription() const {
-    return (this->getName() + ", " + m_job + " with " + m_behavior->getBehavior() + " behavior (level " 
-    + std::to_string(this->getLevel()) + ", force " + std::to_string(this->getForce()) + ")");
-}
-
-const std::string& Sorcerer::getJob() const {
-    return m_job;
 }
 
 Behavior* createPlayerBehavior(const std::string& behavior) {
@@ -147,6 +118,16 @@ Behavior* createPlayerBehavior(const std::string& behavior) {
     }
     else if(behavior == "RiskTaking") {
         return new RiskTaking(behavior);
+    }
+    throw std::runtime_error("Invalid Player File");
+}
+
+Job* createPlayerJob(const string& job) {
+    if(job == "Warrior") {
+        return new Warrior(job);
+    }
+    else if(job == "Sorcerer") {
+        return new Sorcerer(job);
     }
     throw std::runtime_error("Invalid Player File");
 }
